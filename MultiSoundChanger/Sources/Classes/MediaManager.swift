@@ -43,31 +43,8 @@ final class MediaManagerImpl: MediaManager {
     }
     
     func showOSD(volume: Float, chicletsCount: Int = 16) {
-        guard let manager = OSDManager.sharedManager() as? OSDManager else {
-            return
-        }
-        
-        let mouseloc: NSPoint = NSEvent.mouseLocation
-        var displayForPoint: CGDirectDisplayID = 0
-        var count: UInt32 = 0
-        
-        if CGGetDisplaysWithPoint(mouseloc, 1, &displayForPoint, &count) != .success {
-            Logger.warning(Constants.InnerMessages.getDisplayError)
-            displayForPoint = CGMainDisplayID()
-        }
-        
-        let image = (volume == 0) ? OSDGraphicSpeakerMuted.rawValue : OSDGraphicSpeaker.rawValue
-        let volumeStep: Float = 100 / Float(chicletsCount)
-        
-        manager.showImage(
-            Int64(image),
-            onDisplayID: displayForPoint,
-            priority: 0x1F4,
-            msecUntilFade: 1_000,
-            filledChiclets: UInt32(volume / volumeStep),
-            totalChiclets: UInt32(100.0 / volumeStep),
-            locked: false
-        )
+        // OSD.framework's OSDUIHelper no longer draws on macOS 26, so the app renders its own HUD
+        VolumeHUD.shared.show(volume: volume)
     }
     
     // MARK: Private

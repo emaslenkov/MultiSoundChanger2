@@ -13,6 +13,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private let applicationController: ApplicationController = ApplicationControllerImp()
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        MediaKeyRemapper.apply()
         applicationController.start()
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        MediaKeyRemapper.revert()
     }
 }

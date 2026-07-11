@@ -3,13 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		4743EFAB1E91493B0032F5AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4743EFAA1E91493B0032F5AA /* AppDelegate.swift */; };
 		6985C6FE251951F8003C2FDB /* OSD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6985C6FD251951F8003C2FDB /* OSD.framework */; };
-		E4FFDC0757FD125F92CC0F62 /* Pods_MultiSoundChanger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C34C05E9BD81D579A0C4957 /* Pods_MultiSoundChanger.framework */; };
+		AB1234567890ABCDEF000003 /* MediaKeyTap in Frameworks */ = {isa = PBXBuildFile; productRef = AB1234567890ABCDEF000002 /* MediaKeyTap */; };
+		AB1234567890ABCDEF000006 /* VolumeHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000005 /* VolumeHUD.swift */; };
+		AB1234567890ABCDEF000008 /* MediaKeyRemapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000007 /* MediaKeyRemapper.swift */; };
 		F312C54E25B3741C00205846 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F373D8C02561D24600642274 /* Main.storyboard */; };
 		F312C55025B3742200205846 /* Volume.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F373D8BC2561D22000642274 /* Volume.storyboard */; };
 		F3433FCB25B36E16009AAE86 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3433FCA25B36E16009AAE86 /* Images.swift */; };
@@ -32,10 +34,7 @@
 /* Begin PBXFileReference section */
 		4743EFA71E91493B0032F5AA /* MultiSoundChanger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiSoundChanger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4743EFAA1E91493B0032F5AA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4C34C05E9BD81D579A0C4957 /* Pods_MultiSoundChanger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MultiSoundChanger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6985C6FD251951F8003C2FDB /* OSD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OSD.framework; sourceTree = "<group>"; };
-		6FD0ED04AFD1CC1242C9B3B3 /* Pods-MultiSoundChanger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MultiSoundChanger.debug.xcconfig"; path = "Target Support Files/Pods-MultiSoundChanger/Pods-MultiSoundChanger.debug.xcconfig"; sourceTree = "<group>"; };
-		D184B2CD842B856AFFE7DF7E /* Pods-MultiSoundChanger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MultiSoundChanger.release.xcconfig"; path = "Target Support Files/Pods-MultiSoundChanger/Pods-MultiSoundChanger.release.xcconfig"; sourceTree = "<group>"; };
 		F3433FCA25B36E16009AAE86 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		F373D8B02561D1A600642274 /* StatusBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		F373D8B12561D1A600642274 /* AudioManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
@@ -55,6 +54,8 @@
 		F3925974262F2B8000B7AD62 /* ApplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationController.swift; sourceTree = "<group>"; };
 		F3925978262F2F9F00B7AD62 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		F392597B2631ACE700B7AD62 /* Runner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Runner.swift; sourceTree = "<group>"; };
+		AB1234567890ABCDEF000005 /* VolumeHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeHUD.swift; sourceTree = "<group>"; };
+		AB1234567890ABCDEF000007 /* MediaKeyRemapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaKeyRemapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,7 +64,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6985C6FE251951F8003C2FDB /* OSD.framework in Frameworks */,
-				E4FFDC0757FD125F92CC0F62 /* Pods_MultiSoundChanger.framework in Frameworks */,
+				AB1234567890ABCDEF000003 /* MediaKeyTap in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,7 +76,6 @@
 			children = (
 				4743EFA91E91493B0032F5AA /* MultiSoundChanger */,
 				4743EFA81E91493B0032F5AA /* Products */,
-				5E653FF732220067826E9384 /* Pods */,
 				83889335DD9089B748A33010 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -115,20 +115,10 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
-		5E653FF732220067826E9384 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				6FD0ED04AFD1CC1242C9B3B3 /* Pods-MultiSoundChanger.debug.xcconfig */,
-				D184B2CD842B856AFFE7DF7E /* Pods-MultiSoundChanger.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		83889335DD9089B748A33010 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				6985C6FD251951F8003C2FDB /* OSD.framework */,
-				4C34C05E9BD81D579A0C4957 /* Pods_MultiSoundChanger.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -161,6 +151,7 @@
 				F373D8B02561D1A600642274 /* StatusBarController.swift */,
 				F373D8B12561D1A600642274 /* AudioManager.swift */,
 				F373D8B22561D1A600642274 /* MediaManager.swift */,
+				AB1234567890ABCDEF000005 /* VolumeHUD.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -219,6 +210,7 @@
 			children = (
 				F3925978262F2F9F00B7AD62 /* Logger.swift */,
 				F392597B2631ACE700B7AD62 /* Runner.swift */,
+				AB1234567890ABCDEF000007 /* MediaKeyRemapper.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -230,18 +222,18 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4743EFB61E91493B0032F5AA /* Build configuration list for PBXNativeTarget "MultiSoundChanger" */;
 			buildPhases = (
-				11DA7F4B3D2C9321E3505857 /* [CP] Check Pods Manifest.lock */,
-				F373D8802561638C00642274 /* SwiftLint */,
 				4743EFA31E91493B0032F5AA /* Sources */,
 				4743EFA41E91493B0032F5AA /* Frameworks */,
 				4743EFA51E91493B0032F5AA /* Resources */,
-				8ABB500BA33A8DA7ECBE36B7 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = MultiSoundChanger;
+			packageProductDependencies = (
+				AB1234567890ABCDEF000002 /* MediaKeyTap */,
+			);
 			productName = DynamicsIllusion;
 			productReference = 4743EFA71E91493B0032F5AA /* MultiSoundChanger.app */;
 			productType = "com.apple.product-type.application";
@@ -271,6 +263,9 @@
 				Base,
 			);
 			mainGroup = 4743EF9E1E91493B0032F5AA;
+			packageReferences = (
+				AB1234567890ABCDEF000004 /* XCLocalSwiftPackageReference "Vendor/MediaKeyTap" */,
+			);
 			productRefGroup = 4743EFA81E91493B0032F5AA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -294,67 +289,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		11DA7F4B3D2C9321E3505857 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-MultiSoundChanger-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8ABB500BA33A8DA7ECBE36B7 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MultiSoundChanger/Pods-MultiSoundChanger-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/MediaKeyTap/MediaKeyTap.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MediaKeyTap.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MultiSoundChanger/Pods-MultiSoundChanger-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F373D8802561638C00642274 /* SwiftLint */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = SwiftLint;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		4743EFA31E91493B0032F5AA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -374,6 +308,8 @@
 				F3925979262F2F9F00B7AD62 /* Logger.swift in Sources */,
 				F373D8BB2561D21900642274 /* Stories.swift in Sources */,
 				F383684D2561E39E00C7B454 /* Constants.swift in Sources */,
+				AB1234567890ABCDEF000006 /* VolumeHUD.swift in Sources */,
+				AB1234567890ABCDEF000008 /* MediaKeyRemapper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -442,7 +378,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -497,7 +433,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -507,21 +443,19 @@
 		};
 		4743EFB71E91493B0032F5AA /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6FD0ED04AFD1CC1242C9B3B3 /* Pods-MultiSoundChanger.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
-				EXCLUDED_ARCHS = arm64;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = MultiSoundChanger/Other/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rlxone.multisoundchanger;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -533,21 +467,19 @@
 		};
 		4743EFB81E91493B0032F5AA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D184B2CD842B856AFFE7DF7E /* Pods-MultiSoundChanger.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
-				EXCLUDED_ARCHS = arm64;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = MultiSoundChanger/Other/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rlxone.multisoundchanger;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -579,6 +511,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		AB1234567890ABCDEF000004 /* XCLocalSwiftPackageReference "Vendor/MediaKeyTap" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Vendor/MediaKeyTap;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AB1234567890ABCDEF000002 /* MediaKeyTap */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MediaKeyTap;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4743EF9F1E91493B0032F5AA /* Project object */;
 }
