@@ -11,7 +11,7 @@ import Cocoa
 
 // MARK: - Protocols
 
-protocol StatusBarController: class {
+protocol StatusBarController: AnyObject {
     func createMenu()
     func changeStatusItemImage(value: Float)
     func updateVolume(value: Float)
@@ -200,7 +200,7 @@ final class StatusBarControllerImpl: StatusBarController {
     
     @objc
     private func menuAudioSetupAction() {
-        Runner.launchApplication(bundleIndentifier: Constants.AppBundleIdentifier.audioDevices, options: .default)
+        Runner.launchApplication(bundleIdentifier: Constants.AppBundleIdentifier.audioDevices)
     }
     
     @objc

@@ -11,7 +11,7 @@ import Foundation
 
 // MARK: - Protocols
 
-protocol AudioManager: class {
+protocol AudioManager: AnyObject {
     func getDefaultOutputDevice() -> AudioDeviceID
     func getOutputDevices() -> [AudioDeviceID: String]?
     func selectDevice(deviceID: AudioDeviceID)

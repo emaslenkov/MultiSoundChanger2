@@ -37,7 +37,7 @@ public struct KeyEvent {
     public let keyRepeat: Bool
 }
 
-public protocol MediaKeyTapDelegate: class {
+public protocol MediaKeyTapDelegate: AnyObject {
     func handle(mediaKey: MediaKey, event: KeyEvent?, modifiers: NSEvent.ModifierFlags?)
 }
 

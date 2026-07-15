@@ -10,7 +10,7 @@
 
 import Cocoa
 
-protocol MediaApplicationWatcherDelegate: class {
+protocol MediaApplicationWatcherDelegate: AnyObject {
     func updateIsActiveMediaApp(_ active: Bool)
     func whitelistedAppStarted()
 }

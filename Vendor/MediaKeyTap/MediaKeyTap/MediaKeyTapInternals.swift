@@ -33,7 +33,7 @@ func mainScreen() -> NSScreen? {
     return screenWithMouse
 }
 
-protocol MediaKeyTapInternalsDelegate: class {
+protocol MediaKeyTapInternalsDelegate: AnyObject {
     var keysToWatch: [MediaKey] { get set }
     var observeBuiltIn: Bool { get set }
     func updateInterceptMediaKeys(_ intercept: Bool)
