@@ -13,7 +13,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private let applicationController: ApplicationController = ApplicationControllerImp()
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        MediaKeyRemapper.apply()
+        MediaKeyRemapper.installSignalHandlers()
+        // The remapping is applied by MediaManager once accessibility is actually granted —
+        // remapping without a working key tap would leave the user with dead volume keys.
         applicationController.start()
     }
 
