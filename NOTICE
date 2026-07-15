@@ -1,0 +1,43 @@
+MultiSoundChanger2
+Copyright 2026 Evgeny Maslenkov
+
+This product includes software developed by Dmitry Medyuho (rlxone).
+Original project: https://github.com/rlxone/MultiSoundChanger
+Copyright 2017-2021 Dmitry Medyuho
+Licensed under the Apache License, Version 2.0.
+
+This is a community fork. It is not affiliated with, endorsed by, or supported
+by the original author.
+
+--------------------------------------------------------------------------------
+Contributed work merged from upstream pull requests
+--------------------------------------------------------------------------------
+
+The Apple Silicon and macOS Tahoe support in this fork is derived from work
+published as pull requests against the upstream project. Their authors did the
+hard part; this fork integrates, fixes and extends it.
+
+Jeffrey Reisberg (@sparc5)
+  https://github.com/rlxone/MultiSoundChanger/pull/41
+  - Removal of the x86_64-only compiled OSD.framework binary and the
+    EXCLUDED_ARCHS = arm64 workaround, enabling native Apple Silicon builds
+  - Custom VolumeHUD replacing the dead private OSD HUD path
+  - HID-level volume key remapping via hidutil (MediaKeyRemapper)
+  - Vendored MediaKeyTap with F18/F19/F20 mapping, replacing the CocoaPods
+    dependency
+
+juniq (@juniqlim)
+  https://github.com/rlxone/MultiSoundChanger/pull/40
+  - Volume percentage label next to the menu bar slider
+  - Treating mute as a state distinct from zero volume in the HUD
+
+--------------------------------------------------------------------------------
+Third-party components
+--------------------------------------------------------------------------------
+
+MediaKeyTap (Vendor/MediaKeyTap)
+  Copyright (c) Nicholas Hurden
+  https://github.com/nhurden/MediaKeyTap
+  Licensed under the MIT License. See Vendor/MediaKeyTap/LICENSE.
+  Vendored from the the0neyouseek fork, with volume keys remapped to F18/F19/F20
+  so that MediaKeyTap can observe keys the system now intercepts at the HID layer.
