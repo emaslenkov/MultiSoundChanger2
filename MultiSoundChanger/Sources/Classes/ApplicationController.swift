@@ -11,7 +11,7 @@ import MediaKeyTap
 
 // MARK: - Protocols
 
-protocol ApplicationController: class {
+protocol ApplicationController: AnyObject {
     func start()
 }
 
@@ -61,9 +61,9 @@ extension ApplicationControllerImp: MediaManagerDelegate {
         }
         
         let correctedVolume = volume * 100
-        
+
         statusBarController.updateVolume(value: correctedVolume)
-        mediaManager.showOSD(volume: correctedVolume, chicletsCount: Constants.chicletsCount)
+        mediaManager.showOSD(volume: correctedVolume, muted: audioManager.isMuted)
         
         Logger.debug(Constants.InnerMessages.selectedDeviceVolume(volume: String(correctedVolume)))
     }

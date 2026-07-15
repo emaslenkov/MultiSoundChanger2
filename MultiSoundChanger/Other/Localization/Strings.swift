@@ -14,4 +14,5 @@ enum Strings {
     static var quit = NSLocalizedString("quit", comment: "")
     static var soundPreferences = NSLocalizedString("sound.preferences", comment: "")
     static var audioDevices = NSLocalizedString("audio.devices", comment: "")
+    static var muted = NSLocalizedString("muted", comment: "")
 }

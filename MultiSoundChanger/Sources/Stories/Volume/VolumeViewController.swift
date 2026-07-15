@@ -12,6 +12,7 @@ import MediaKeyTap
 
 final class VolumeViewController: NSViewController {
     @IBOutlet weak var volumeSlider: NSSlider!
+    @IBOutlet weak var volumeLabel: NSTextField!
     private var muted: Bool = false
     
     weak var statusBarController: StatusBarController?
@@ -22,11 +23,14 @@ final class VolumeViewController: NSViewController {
     }
     
     func updateSliderVolume(volume: Float) {
-        volumeSlider.floatValue = volume.clamped(to: 0...100)
+        let clamped = volume.clamped(to: 0...100)
+        volumeSlider.floatValue = clamped
+        volumeLabel?.stringValue = "\(Int(clamped))%"
     }
     
     @IBAction func volumeSliderAction(_ sender: Any) {
         changeDeviceVolume(value: volumeSlider.floatValue / 100)
         statusBarController?.changeStatusItemImage(value: volumeSlider.floatValue)
+        volumeLabel?.stringValue = "\(Int(volumeSlider.floatValue))%"
     }
 }

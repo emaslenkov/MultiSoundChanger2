@@ -3,7 +3,13 @@
 //  MultiSoundChanger
 //
 //  Replacement for the private OSD.framework HUD, which no longer draws
-//  anything on macOS 26.
+//  anything on macOS 26: OSDManager's API is still present and showImage still
+//  accepts the call, but OSDUIHelper never gets spawned and nothing appears.
+//
+//  Deliberately a pill at the top of the screen rather than the classic centred
+//  square: Tahoe renders volume as a compact popover near Control Center, so the
+//  old chiclet square would read as dated rather than native. Colours come from
+//  NSVisualEffectView + labelColor so light and dark both work.
 //
 
 import Cocoa
@@ -23,7 +29,10 @@ final class VolumeHUD {
     private var hudView: VolumeHUDView?
     private var hideWorkItem: DispatchWorkItem?
 
-    func show(volume: Float) {
+    /// Bumped on every show so a fade scheduled by an earlier show can tell it has been superseded.
+    private var showGeneration = 0
+
+    func show(volume: Float, muted: Bool) {
         if panel == nil {
             buildPanel()
         }
@@ -31,14 +40,23 @@ final class VolumeHUD {
             return
         }
 
-        hudView.volume = volume
+        hudView.update(volume: volume, muted: muted)
         position(panel)
+
+        showGeneration += 1
+        let generation = showGeneration
         hideWorkItem?.cancel()
-        panel.alphaValue = 1
+
+        // Cancels an in-flight fade instead of racing it: assigning alphaValue directly would let
+        // the running animation finish and drive the panel back to 0 — that is the flicker.
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0
+            panel.animator().alphaValue = 1
+        }
         panel.orderFrontRegardless()
 
         let workItem = DispatchWorkItem { [weak self] in
-            self?.fadeOut()
+            self?.fadeOut(generation: generation)
         }
         hideWorkItem = workItem
         DispatchQueue.main.asyncAfter(deadline: .now() + Metrics.visibleInterval, execute: workItem)
@@ -48,7 +66,14 @@ final class VolumeHUD {
 
     private func buildPanel() {
         let frame = NSRect(x: 0, y: 0, width: Metrics.width, height: Metrics.height)
-        let panel = NSPanel(contentRect: frame, styleMask: [.borderless, .nonactivatingPanel], backing: .buffered, defer: false)
+
+        // .nonactivatingPanel keeps the frontmost app's focus: showing the HUD must never steal it.
+        let panel = NSPanel(
+            contentRect: frame,
+            styleMask: [.borderless, .nonactivatingPanel],
+            backing: .buffered,
+            defer: false
+        )
         panel.level = .screenSaver
         panel.isOpaque = false
         panel.backgroundColor = .clear
@@ -98,14 +123,19 @@ final class VolumeHUD {
         panel.setFrameOrigin(origin)
     }
 
-    private func fadeOut() {
+    private func fadeOut(generation: Int) {
+        guard generation == showGeneration else {
+            return
+        }
+
         NSAnimationContext.runAnimationGroup({ context in
             context.duration = Metrics.fadeDuration
             panel?.animator().alphaValue = 0
         }, completionHandler: { [weak self] in
-            if self?.panel?.alphaValue == 0 {
-                self?.panel?.orderOut(nil)
+            guard let self = self, generation == self.showGeneration else {
+                return
             }
+            self.panel?.orderOut(nil)
         })
     }
 }
@@ -113,11 +143,8 @@ final class VolumeHUD {
 // MARK: - VolumeHUDView
 
 private final class VolumeHUDView: NSView {
-    var volume: Float = 0 {
-        didSet {
-            needsDisplay = true
-        }
-    }
+    private var volume: Float = 0
+    private var muted: Bool = false
 
     private enum Metrics {
         static let iconSize: CGFloat = 22
@@ -125,18 +152,27 @@ private final class VolumeHUDView: NSView {
         static let trackLeftMargin: CGFloat = 52
         static let trackRightMargin: CGFloat = 58
         static let trackHeight: CGFloat = 6
-        static let percentRightMargin: CGFloat = 16
+        static let labelRightMargin: CGFloat = 16
+    }
+
+    func update(volume: Float, muted: Bool) {
+        self.volume = volume
+        self.muted = muted
+        needsDisplay = true
     }
 
     override func draw(_ dirtyRect: NSRect) {
         drawIcon()
         drawTrack()
-        drawPercent()
+        drawLabel()
     }
 
+    /// Muted is a state of its own: a device sitting at 0% is not the same as a muted one.
     private var symbolName: String {
-        if volume <= 0 {
+        if muted {
             return "speaker.slash.fill"
+        } else if volume <= 0 {
+            return "speaker.fill"
         } else if volume < 34 {
             return "speaker.wave.1.fill"
         } else if volume < 67 {
@@ -174,6 +210,10 @@ private final class VolumeHUDView: NSView {
         NSColor.labelColor.withAlphaComponent(0.25).setFill()
         NSBezierPath(roundedRect: trackRect, xRadius: radius, yRadius: radius).fill()
 
+        guard !muted else {
+            return
+        }
+
         let fillWidth = trackRect.width * CGFloat(min(max(volume, 0), 100)) / 100
         if fillWidth > 0 {
             var fillRect = trackRect
@@ -183,15 +223,15 @@ private final class VolumeHUDView: NSView {
         }
     }
 
-    private func drawPercent() {
-        let text = "\(Int(volume.rounded()))%"
+    private func drawLabel() {
+        let text = muted ? Strings.muted : "\(Int(volume.rounded()))%"
         let attributes: [NSAttributedString.Key: Any] = [
             .font: NSFont.monospacedDigitSystemFont(ofSize: 13, weight: .medium),
             .foregroundColor: NSColor.labelColor
         ]
         let size = text.size(withAttributes: attributes)
         let point = NSPoint(
-            x: bounds.width - Metrics.percentRightMargin - size.width,
+            x: bounds.width - Metrics.labelRightMargin - size.width,
             y: (bounds.height - size.height) / 2
         )
         text.draw(at: point, withAttributes: attributes)
