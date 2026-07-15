@@ -9,28 +9,40 @@
         <!--MultiSoundChanger-->
         <scene sceneID="Sd2-Ok-bVn">
             <objects>
-                <viewController title="MultiSoundChanger" storyboardIdentifier="VolumeViewController" id="EzY-mR-Bqy" customClass="VolumeViewController" customModule="MultiSoundChanger" sceneMemberID="viewController">
+                <viewController title="MultiSoundChanger" storyboardIdentifier="VolumeViewController" id="EzY-mR-Bqy" customClass="VolumeViewController" customModule="MultiSoundChanger" customModuleProvider="target" sceneMemberID="viewController">
                     <customView key="view" id="Ot1-Uv-DQ0">
                         <rect key="frame" x="0.0" y="0.0" width="253" height="28"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <subviews>
                             <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Imv-Ah-oMz">
-                                <rect key="frame" x="18" y="-2" width="217" height="28"/>
+                                <rect key="frame" x="18" y="-2" width="177" height="28"/>
                                 <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="Prx-bs-PU2"/>
                                 <connections>
                                     <action selector="volumeSliderAction:" target="EzY-mR-Bqy" id="Ata-d7-ikN"/>
                                 </connections>
                             </slider>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VoL-Lb-001">
+                                <rect key="frame" x="200" y="6" width="40" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="50%" id="VoL-Lb-002">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="Imv-Ah-oMz" secondAttribute="bottom" constant="4" id="0Ws-Fb-wEv"/>
                             <constraint firstItem="Imv-Ah-oMz" firstAttribute="top" secondItem="Ot1-Uv-DQ0" secondAttribute="top" constant="4" id="6YS-3j-emH"/>
                             <constraint firstItem="Imv-Ah-oMz" firstAttribute="leading" secondItem="Ot1-Uv-DQ0" secondAttribute="leading" constant="20" id="CLf-zm-zAD"/>
-                            <constraint firstAttribute="trailing" secondItem="Imv-Ah-oMz" secondAttribute="trailing" constant="20" id="hpE-zY-iJ2"/>
+                            <constraint firstItem="VoL-Lb-001" firstAttribute="leading" secondItem="Imv-Ah-oMz" secondAttribute="trailing" constant="4" id="sLd-vL-001"/>
+                            <constraint firstAttribute="trailing" secondItem="VoL-Lb-001" secondAttribute="trailing" constant="8" id="sLd-vL-002"/>
+                            <constraint firstItem="VoL-Lb-001" firstAttribute="centerY" secondItem="Ot1-Uv-DQ0" secondAttribute="centerY" id="sLd-vL-003"/>
+                            <constraint firstItem="VoL-Lb-001" firstAttribute="width" constant="40" id="sLd-vL-004"/>
                         </constraints>
                     </customView>
                     <connections>
                         <outlet property="volumeSlider" destination="Imv-Ah-oMz" id="jvJ-bq-KlG"/>
+                        <outlet property="volumeLabel" destination="VoL-Lb-001" id="jvJ-bq-VL1"/>
                     </connections>
                 </viewController>
                 <customObject id="0bv-Tu-Tud" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

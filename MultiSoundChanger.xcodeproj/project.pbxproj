@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		4743EFAB1E91493B0032F5AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4743EFAA1E91493B0032F5AA /* AppDelegate.swift */; };
-		6985C6FE251951F8003C2FDB /* OSD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6985C6FD251951F8003C2FDB /* OSD.framework */; };
 		AB1234567890ABCDEF000003 /* MediaKeyTap in Frameworks */ = {isa = PBXBuildFile; productRef = AB1234567890ABCDEF000002 /* MediaKeyTap */; };
 		AB1234567890ABCDEF000006 /* VolumeHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000005 /* VolumeHUD.swift */; };
 		AB1234567890ABCDEF000008 /* MediaKeyRemapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000007 /* MediaKeyRemapper.swift */; };
@@ -34,7 +33,6 @@
 /* Begin PBXFileReference section */
 		4743EFA71E91493B0032F5AA /* MultiSoundChanger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiSoundChanger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4743EFAA1E91493B0032F5AA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		6985C6FD251951F8003C2FDB /* OSD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OSD.framework; sourceTree = "<group>"; };
 		F3433FCA25B36E16009AAE86 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		F373D8B02561D1A600642274 /* StatusBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		F373D8B12561D1A600642274 /* AudioManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
@@ -63,7 +61,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6985C6FE251951F8003C2FDB /* OSD.framework in Frameworks */,
 				AB1234567890ABCDEF000003 /* MediaKeyTap in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -118,7 +115,6 @@
 		83889335DD9089B748A33010 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				6985C6FD251951F8003C2FDB /* OSD.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -457,8 +453,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rlxone.multisoundchanger;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.emaslenkov.multisoundchanger2;
+				PRODUCT_NAME = MultiSoundChanger2;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MultiSoundChanger/Other/MultiSoundChanger-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -481,8 +477,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rlxone.multisoundchanger;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.emaslenkov.multisoundchanger2;
+				PRODUCT_NAME = MultiSoundChanger2;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MultiSoundChanger/Other/MultiSoundChanger-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
