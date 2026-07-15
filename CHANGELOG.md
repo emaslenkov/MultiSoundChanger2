@@ -8,7 +8,10 @@ Versions below v1.1.0 belong to the upstream project.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.1.0] — 2026-07-15
+
+First release of this fork. Tagged `v1.1.0-tahoe`: the suffix marks it as a community fork rather
+than an official rlxone release, while the bundle version stays a plain 1.1.0 as macOS expects.
 
 ### Added
 
