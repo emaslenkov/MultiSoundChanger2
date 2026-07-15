@@ -52,15 +52,14 @@ enum Logger {
     }
     
     private static func getDebugLine(symbol: DebugSymbol, string: String) -> String {
-        let symbol = DebugSymbol.info.rawValue
         let logDate = getLogDate()
-        return "\(symbol) [\(logDate)] \(string)"
+        return "\(symbol.rawValue) [\(logDate)] \(string)"
     }
-    
+
     private static func outAndFilePrint(symbol: DebugSymbol, string: String) {
-        outPrint(symbol: .error, string: string)
+        outPrint(symbol: symbol, string: string)
         do {
-            try filePrint(symbol: .info, string: string)
+            try filePrint(symbol: symbol, string: string)
         } catch let error {
             outPrint(symbol: .error, string: error.localizedDescription)
         }

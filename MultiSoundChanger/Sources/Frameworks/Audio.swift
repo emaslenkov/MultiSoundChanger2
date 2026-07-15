@@ -46,7 +46,7 @@ final class AudioImpl: Audio {
         var propertyAddress = AudioObjectPropertyAddress(
             mSelector: AudioObjectPropertySelector(kAudioDevicePropertyStreams),
             mScope: AudioObjectPropertyScope(kAudioDevicePropertyScopeOutput),
-            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMaster))
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
         
         AudioObjectGetPropertyDataSize(deviceID, &propertyAddress, 0, nil, &propertySize)
         
@@ -60,7 +60,7 @@ final class AudioImpl: Audio {
         var propertyAddress = AudioObjectPropertyAddress(
             mSelector: AudioObjectPropertySelector(kAudioAggregateDevicePropertyActiveSubDeviceList),
             mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeGlobal),
-            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMaster))
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
         
         var subDevicesSize = subDevicesCount * UInt32(MemoryLayout<UInt32>.size)
         
@@ -81,7 +81,7 @@ final class AudioImpl: Audio {
         var propertyAddress = AudioObjectPropertyAddress(
             mSelector: AudioObjectPropertySelector(kAudioDevicePropertyMute),
             mScope: AudioObjectPropertyScope(kAudioDevicePropertyScopeOutput),
-            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMaster))
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
         
         let status = AudioObjectGetPropertyData(deviceID, &propertyAddress, 0, nil, &propertySize, &mutedValue)
         
@@ -134,7 +134,7 @@ final class AudioImpl: Audio {
         var propertyAddress = AudioObjectPropertyAddress(
             mSelector: AudioObjectPropertySelector(kAudioDevicePropertyMute),
             mScope: AudioObjectPropertyScope(kAudioDevicePropertyScopeOutput),
-            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMaster))
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
         
         AudioObjectSetPropertyData(deviceID, &propertyAddress, 0, nil, propertySize, &mutedValue)
     }
@@ -146,7 +146,7 @@ final class AudioImpl: Audio {
         var propertyAddress = AudioObjectPropertyAddress(
             mSelector: AudioObjectPropertySelector(kAudioHardwarePropertyDefaultOutputDevice),
             mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeGlobal),
-            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMaster))
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
         
         AudioObjectSetPropertyData(AudioObjectID(kAudioObjectSystemObject), &propertyAddress, 0, nil, propertySize, &deviceID)
     }
@@ -195,7 +195,7 @@ final class AudioImpl: Audio {
         var propertyAddress = AudioObjectPropertyAddress(
             mSelector: AudioObjectPropertySelector(kAudioHardwarePropertyDefaultOutputDevice),
             mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeGlobal),
-            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMaster))
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
         
         AudioObjectGetPropertyData(AudioObjectID(kAudioObjectSystemObject), &propertyAddress, 0, nil, &propertySize, &deviceID)
         
@@ -209,7 +209,7 @@ final class AudioImpl: Audio {
         var propertyAddress = AudioObjectPropertyAddress(
             mSelector: AudioObjectPropertySelector(kAudioDevicePropertyTransportType),
             mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeGlobal),
-            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMaster))
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
         
         AudioObjectGetPropertyData(deviceID, &propertyAddress, 0, nil, &propertySize, &deviceTransportType)
         
@@ -222,7 +222,7 @@ final class AudioImpl: Audio {
         var propertyAddress = AudioObjectPropertyAddress(
             mSelector: AudioObjectPropertySelector(kAudioHardwarePropertyDevices),
             mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeGlobal),
-            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMaster))
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
         
         AudioObjectGetPropertyDataSize(AudioObjectID(kAudioObjectSystemObject), &propertyAddress, 0, nil, &propertySize)
         
@@ -235,49 +235,34 @@ final class AudioImpl: Audio {
         var propertyAddress = AudioObjectPropertyAddress(
             mSelector: AudioObjectPropertySelector(kAudioAggregateDevicePropertyActiveSubDeviceList),
             mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeGlobal),
-            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMaster))
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
         
         AudioObjectGetPropertyDataSize(deviceID, &propertyAddress, 0, nil, &propertySize)
         
         return propertySize / UInt32(MemoryLayout<AudioDeviceID>.size)
     }
     
+    /// Reads the device name as an `Unmanaged<CFString>` rather than writing straight into a
+    /// `CFString` variable: CoreAudio hands back a +1 retained reference, and letting it write over
+    /// an ARC-managed variable bypasses ownership entirely.
     private func getDeviceName(deviceID: AudioDeviceID) -> String {
-        var propertySize = UInt32(MemoryLayout<CFString>.size)
-        
+        var propertySize = UInt32(MemoryLayout<CFString?>.size)
+
         var propertyAddress = AudioObjectPropertyAddress(
             mSelector: AudioObjectPropertySelector(kAudioDevicePropertyDeviceNameCFString),
             mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeGlobal),
-            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMaster))
-        
-        var result: CFString = "" as CFString
-        
-        AudioObjectGetPropertyData(deviceID, &propertyAddress, 0, nil, &propertySize, &result)
-        
-        return result as String
-    }
-    
-    private func getDeviceType(deviceID: AudioDeviceID) -> String {
-        var propertyAddress = AudioObjectPropertyAddress(
-            mSelector: AudioObjectPropertySelector(kAudioDevicePropertyDataSourceNameForIDCFString),
-            mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeOutput),
-            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMaster))
-        
-        var sourceID: UInt32 = 0
-        var result: CFString = "" as CFString
-        
-        var translation = AudioValueTranslation(
-            mInputData: withUnsafeMutablePointer(to: &sourceID) { pointer in pointer },
-            mInputDataSize: UInt32(MemoryLayout<UInt32>.size),
-            mOutputData: withUnsafeMutablePointer(to: &result) { pointer in pointer },
-            mOutputDataSize: UInt32(MemoryLayout<CFString>.size)
-        )
-        
-        var propertySize = UInt32(MemoryLayout<AudioValueTranslation>.size)
-        
-        AudioObjectGetPropertyData(deviceID, &propertyAddress, 0, nil, &propertySize, &translation)
-        
-        return result as String
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
+
+        var result: Unmanaged<CFString>?
+
+        let status = AudioObjectGetPropertyData(deviceID, &propertyAddress, 0, nil, &propertySize, &result)
+
+        guard status == noErr, let name = result?.takeRetainedValue() else {
+            Logger.warning(Constants.InnerMessages.deviceNameError(deviceID: String(deviceID)))
+            return String()
+        }
+
+        return name as String
     }
     
     private func getAllDevices() -> [AudioDeviceID] {
@@ -287,7 +272,7 @@ final class AudioImpl: Audio {
         var propertyAddress = AudioObjectPropertyAddress(
             mSelector: AudioObjectPropertySelector(kAudioHardwarePropertyDevices),
             mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeGlobal),
-            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMaster))
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
         
         var devicesSize = devicesCount * UInt32(MemoryLayout<UInt32>.size)
         
