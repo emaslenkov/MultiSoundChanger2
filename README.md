@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="350" height="276" src="https://user-images.githubusercontent.com/8312717/115996670-e6511000-a5e8-11eb-8c46-869378d4df2a.png">
+  <img width="440" src="screenshots/menu.png" alt="MultiSoundChanger2 menu: multi-output device selection, hide system icon, and icon tint">
 </p>
 
 ## MultiSound Changer for macOS — Tahoe / Apple Silicon fork
@@ -8,18 +8,27 @@
 > which has seen no release since v1.0.1 (April 2021) and neither builds nor works on Apple Silicon
 > or macOS Tahoe. It is **not** affiliated with or endorsed by the original author.
 
-A small tool for changing sound volume **even for aggregate devices** cause native sound volume
-controller can't change volume of aggregate devices.
+A menu-bar app that controls the volume of **aggregate and multi-output devices** — the ones macOS
+won't let you adjust, because its built-in volume slider is greyed out for them. It sets the volume of
+every sub-device in the aggregate, which is the one thing the system control can't do.
 
 Features:
-* **Changing sound volume of every device** (even virtual aggregate device volume by changing volume of every device in aggregate device)
-* Changing default output device
-* Native appearance (follows system light/dark appearance)
-* Media keys support
-* Runs natively on Apple Silicon and macOS Tahoe
 
-It can be very useful if you're using VoodooHDA with 4.0+ sound on the board, but you can find
-another use cases.
+* **Volume for aggregate / multi-output devices.** The core feature: adjust the volume of every
+  device inside an aggregate at once, from a single slider in the menu bar or with the media keys.
+* **Send sound to several devices at once — straight from the menu.** Tick the outputs you want and
+  the app builds and manages a Multi-Output device for you; no more assembling one by hand in Audio
+  MIDI Setup. A plain click switches to a single device, **⇧-click** adds/removes devices from the
+  set without closing the menu. A device that gets unplugged stays selected and is picked back up
+  when it returns.
+* **Switch the default output device** right from the menu.
+* **Tell this app's icon apart from the system one.** Optionally hide the system's own volume icon,
+  and/or tint this app's icon (Blue / Orange / Green / Purple / Pink) — both are off by default.
+* **Media keys** (volume up / down / mute) drive the selected device, aggregate included.
+* **Native look** — follows the system light/dark appearance.
+* **Universal binary** — runs natively on Apple Silicon and Intel, macOS 11+ including Tahoe.
+
+Handy if you run VoodooHDA with 4.0+ output, among other multi-device setups.
 
 ## Tahoe / Apple Silicon support
 
@@ -60,12 +69,28 @@ onto F18/F19/F20 — which the system ignores and the app picks up instead.
 
 ## Usage
 
-For example if you want to play 2 or more output devices at the same time you should:
-* Create aggregate device in Audio MIDI Setup
-* Add all output devices you want to this new aggregate device
-* Hide default sound controller icon if enabled (by dragging away or in audio preferences)
-* Use our app to control sound volume
-* Add our app to startup (if you need)
+### Playing sound on multiple devices at once
+
+Open the menu and use the device list: a plain click switches output to that device; **⇧-click**
+(shift-click) toggles it into or out of the current selection without closing the menu, so you can
+check several devices in one go. The app creates and manages a single Multi-Output device for you —
+there's no need to build one by hand in Audio MIDI Setup any more. At least one device is always
+selected; the last checked box can't be unchecked. A device you selected that gets unplugged stays
+checked (shown greyed out) and is picked back up automatically once it's back.
+
+### Hiding the system volume icon
+
+This app's menu bar icon sits right next to the system's own volume icon and can be hard to tell
+apart from it. Check **"Hide system volume icon"** in the menu to hide the system one while the app
+is running — it's restored automatically when you quit. Off by default; the app never touches this
+setting unless you turn it on.
+
+### Tinting the menu bar icon
+
+Pick one of the colour swatches in the menu (Blue / Orange / Green / Purple / Pink) to recolour this
+app's own icon, as another way to tell it apart from the system one at a glance. Each swatch previews
+the actual icon in that colour. "Default" resets it to the normal look. The choice is remembered
+across restarts.
 
 The app needs **accessibility permission** to observe media keys, and will ask on first launch.
 
@@ -92,6 +117,27 @@ hidutil property --set '{"UserKeyMapping":[]}'
 ```
 
 The remapping does not survive a reboot either, so restarting also clears it.
+
+**The managed Multi-Output device can outlive a crash, for the same reason.** It has to be visible
+system-wide (`private: 0`) so that other apps' sound can reach it too — which means it also survives
+if the process dies unexpectedly, same as the key remapping above. On every launch the app looks for
+it by a fixed UID and reuses it instead of creating a duplicate. If you ever remove the app for good
+and want to clean up after it, delete the **"MultiSoundChanger2 Output"** device by hand in Audio MIDI
+Setup.
+
+**Hiding the system volume icon relies on an undocumented Control Center preference**
+(`com.apple.controlcenter Sound`). The app reads, saves and restores whatever value was already there
+— it never hardcodes a value to restore — but Apple could rename or remove this key in a future macOS
+release, at which point hiding/restoring will simply stop working (logged, not a crash). To revert by
+hand:
+
+```sh
+defaults -currentHost write com.apple.controlcenter Sound -int 16
+killall ControlCenter
+```
+
+(`16` is what "Always Show" typically maps to on most Macs — not a guaranteed universal value; if it
+doesn't bring the icon back, check Control Center settings directly.)
 
 **Your own key remappings are safe.** `hidutil` replaces the entire `UserKeyMapping` list, so a naive
 implementation would wipe remappings you set up yourself (Caps Lock → Escape and friends). This fork

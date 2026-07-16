@@ -13,18 +13,45 @@ import MediaKeyTap
 
 protocol ApplicationController: AnyObject {
     func start()
+    func stop()
 }
 
 // MARK: - Implementation
 
 final class ApplicationControllerImp: ApplicationController {
-    private lazy var audioManager: AudioManager = AudioManagerImpl()
+    private let audio: Audio = AudioImpl()
+    private lazy var aggregateDeviceManager: AggregateDeviceManager = AggregateDeviceManagerImpl(audio: audio)
+    private lazy var audioManager: AudioManager = AudioManagerImpl(audio: audio, aggregateDeviceManager: aggregateDeviceManager)
+    private lazy var systemVolumeIconController: SystemVolumeIconController = SystemVolumeIconControllerImpl()
     private lazy var mediaManager: MediaManager = MediaManagerImpl(delegate: self)
-    private lazy var statusBarController: StatusBarController = StatusBarControllerImpl(audioManager: audioManager)
-    
+    private lazy var statusBarController: StatusBarController = StatusBarControllerImpl(
+        audioManager: audioManager,
+        systemVolumeIconController: systemVolumeIconController
+    )
+
     func start() {
+        audioManager.restoreSelectionAtLaunch()
+
+        if UserDefaults.standard.bool(forKey: Constants.UserDefaultsKeys.hideSystemVolumeIcon) {
+            systemVolumeIconController.hide()
+        } else {
+            systemVolumeIconController.repairIfNeeded()
+        }
+
         statusBarController.createMenu()
         mediaManager.listenMediaKeyTaps()
+    }
+
+    /// Teardown for a clean quit and for SIGTERM/SIGINT (see `AppDelegate`). Deliberately does
+    /// *not* touch the multi-output aggregate: the hybrid lifecycle (PLAN-multi-output.md,
+    /// decision 3) already destroys it the moment the selection collapses below 2 devices, live,
+    /// as it happens — a still-active (≥2) selection is meant to be left standing at exit, so
+    /// there is nothing left to do here.
+    func stop() {
+        if UserDefaults.standard.bool(forKey: Constants.UserDefaultsKeys.hideSystemVolumeIcon) {
+            systemVolumeIconController.restore()
+        }
+        MediaKeyRemapper.revert()
     }
 }
 

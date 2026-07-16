@@ -11,6 +11,10 @@
 		AB1234567890ABCDEF000003 /* MediaKeyTap in Frameworks */ = {isa = PBXBuildFile; productRef = AB1234567890ABCDEF000002 /* MediaKeyTap */; };
 		AB1234567890ABCDEF000006 /* VolumeHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000005 /* VolumeHUD.swift */; };
 		AB1234567890ABCDEF000008 /* MediaKeyRemapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000007 /* MediaKeyRemapper.swift */; };
+		AB1234567890ABCDEF00000A /* AggregateDeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000009 /* AggregateDeviceManager.swift */; };
+		AB1234567890ABCDEF00000C /* SystemVolumeIconController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF00000B /* SystemVolumeIconController.swift */; };
+		AB1234567890ABCDEF00000E /* DeviceListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF00000D /* DeviceListView.swift */; };
+		AB1234567890ABCDEF000010 /* IconTintPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF00000F /* IconTintPickerView.swift */; };
 		F312C54E25B3741C00205846 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F373D8C02561D24600642274 /* Main.storyboard */; };
 		F312C55025B3742200205846 /* Volume.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F373D8BC2561D22000642274 /* Volume.storyboard */; };
 		F3433FCB25B36E16009AAE86 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3433FCA25B36E16009AAE86 /* Images.swift */; };
@@ -54,6 +58,10 @@
 		F392597B2631ACE700B7AD62 /* Runner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Runner.swift; sourceTree = "<group>"; };
 		AB1234567890ABCDEF000005 /* VolumeHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeHUD.swift; sourceTree = "<group>"; };
 		AB1234567890ABCDEF000007 /* MediaKeyRemapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaKeyRemapper.swift; sourceTree = "<group>"; };
+		AB1234567890ABCDEF000009 /* AggregateDeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregateDeviceManager.swift; sourceTree = "<group>"; };
+		AB1234567890ABCDEF00000B /* SystemVolumeIconController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemVolumeIconController.swift; sourceTree = "<group>"; };
+		AB1234567890ABCDEF00000D /* DeviceListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceListView.swift; sourceTree = "<group>"; };
+		AB1234567890ABCDEF00000F /* IconTintPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconTintPickerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +156,7 @@
 				F373D8B12561D1A600642274 /* AudioManager.swift */,
 				F373D8B22561D1A600642274 /* MediaManager.swift */,
 				AB1234567890ABCDEF000005 /* VolumeHUD.swift */,
+				AB1234567890ABCDEF000009 /* AggregateDeviceManager.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -158,6 +167,8 @@
 				F373D8BA2561D21900642274 /* Stories.swift */,
 				F373D8B92561D1F200642274 /* Main */,
 				F373D8B82561D1ED00642274 /* Volume */,
+				AB1234567890ABCDEF000011 /* DeviceList */,
+				AB1234567890ABCDEF000012 /* IconTint */,
 			);
 			path = Stories;
 			sourceTree = "<group>";
@@ -169,6 +180,22 @@
 				F373D8BD2561D22000642274 /* VolumeViewController.swift */,
 			);
 			path = Volume;
+			sourceTree = "<group>";
+		};
+		AB1234567890ABCDEF000011 /* DeviceList */ = {
+			isa = PBXGroup;
+			children = (
+				AB1234567890ABCDEF00000D /* DeviceListView.swift */,
+			);
+			path = DeviceList;
+			sourceTree = "<group>";
+		};
+		AB1234567890ABCDEF000012 /* IconTint */ = {
+			isa = PBXGroup;
+			children = (
+				AB1234567890ABCDEF00000F /* IconTintPickerView.swift */,
+			);
+			path = IconTint;
 			sourceTree = "<group>";
 		};
 		F373D8B92561D1F200642274 /* Main */ = {
@@ -207,6 +234,7 @@
 				F3925978262F2F9F00B7AD62 /* Logger.swift */,
 				F392597B2631ACE700B7AD62 /* Runner.swift */,
 				AB1234567890ABCDEF000007 /* MediaKeyRemapper.swift */,
+				AB1234567890ABCDEF00000B /* SystemVolumeIconController.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -306,6 +334,10 @@
 				F383684D2561E39E00C7B454 /* Constants.swift in Sources */,
 				AB1234567890ABCDEF000006 /* VolumeHUD.swift in Sources */,
 				AB1234567890ABCDEF000008 /* MediaKeyRemapper.swift in Sources */,
+				AB1234567890ABCDEF00000A /* AggregateDeviceManager.swift in Sources */,
+				AB1234567890ABCDEF00000C /* SystemVolumeIconController.swift in Sources */,
+				AB1234567890ABCDEF00000E /* DeviceListView.swift in Sources */,
+				AB1234567890ABCDEF000010 /* IconTintPickerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

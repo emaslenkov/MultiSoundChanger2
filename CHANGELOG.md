@@ -8,6 +8,36 @@ Versions below v1.1.0 belong to the upstream project.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] — 2026-07-16
+
+Tagged `v1.2.0-tahoe`, bundle version a plain 1.2.0 as macOS expects.
+
+### Added
+
+- **Pick multiple output devices right from the menu.** The app now creates and manages its own
+  Multi-Output device (`AggregateDeviceManager`) with a fixed identifier, so playing sound on several
+  devices at once no longer requires building an aggregate by hand in Audio MIDI Setup. A plain click
+  on a device switches to it; ⇧-click toggles it into or out of the current selection without closing
+  the menu. At least one device is always selected. A selected device that gets unplugged stays
+  checked (shown greyed out) and is picked back up automatically once it reappears. The selection
+  survives app and system restarts; a device orphaned by a crash (`kill -9`) is found by its fixed UID
+  and reused on the next launch instead of being duplicated.
+- **Hide the system's own volume icon.** Menu checkbox, off by default, applies immediately; restores
+  the icon's original state on quit, `SIGTERM`/`SIGINT`, and repairs it on the next launch if the app
+  was killed while it was hidden.
+- **Tint the menu bar icon.** A row of swatches in the menu (Default plus Blue/Orange/Green/Purple/Pink)
+  recolours the existing template icon — no new icon assets, no change to its shape. The tint is a
+  rendered colour-filled copy of the glyph (not `contentTintColor`, which does not tint a status-bar
+  button on Tahoe). Each swatch previews the actual icon in that colour. Persists across restarts,
+  independent of the system icon setting above.
+- `ApplicationController.stop()`, called from a clean quit and from the `SIGTERM`/`SIGINT` handlers
+  alike, so every system-level change this app makes goes through exactly one teardown path.
+
+### Changed
+
+- The menu-bar volume row is more compact: the numeric percentage label was removed, leaving just the
+  slider, which also narrows the menu.
+
 ## [1.1.0] — 2026-07-15
 
 First release of this fork. Tagged `v1.1.0-tahoe`: the suffix marks it as a community fork rather

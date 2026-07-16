@@ -7,8 +7,18 @@
 */
 
 "volume" = "Volume:";
-"output" = "Output Device:";
+"output" = "Output Device";
+"output.multiple" = "Output Devices (%d)";
+"output.hint" = "Click: one device   ·   ⇧-click: several";
 "quit" = "Quit";
 "sound.preferences" = "Sound Preferences...";
 "audio.devices" = "Audio Devices...";
 "muted" = "Muted";
+"hide.system.icon" = "Hide system volume icon";
+"icon.tint.header" = "Choose icon style";
+"icon.tint.default" = "Default";
+"icon.tint.blue" = "Blue";
+"icon.tint.orange" = "Orange";
+"icon.tint.green" = "Green";
+"icon.tint.purple" = "Purple";
+"icon.tint.pink" = "Pink";

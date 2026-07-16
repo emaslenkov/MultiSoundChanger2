@@ -50,8 +50,6 @@ enum MediaKeyRemapper {
         return Set(ownMappings.map { $0.src })
     }
 
-    private static var signalSources: [DispatchSourceSignal] = []
-
     // MARK: Public
 
     /// Installs our remapping while preserving any mapping the user set up themselves.
@@ -75,26 +73,6 @@ enum MediaKeyRemapper {
         let foreignMappings = readMappings().filter { !ownSources.contains($0.src) }
         writeMappings(foreignMappings)
         Logger.debug(Constants.InnerMessages.keyMappingReverted)
-    }
-
-    /// Reverts the remapping on SIGTERM/SIGINT too, not just on a clean quit.
-    ///
-    /// Nothing can be done about SIGKILL — the mapping outlives the process and the user is left
-    /// with dead volume keys until the app is launched again (see `apply`) or they run
-    /// `hidutil property --set '{"UserKeyMapping":[]}'` by hand. Documented in README.
-    static func installSignalHandlers() {
-        for signalNumber in [SIGTERM, SIGINT] {
-            // Suppress the default disposition, otherwise the process dies before the handler runs.
-            signal(signalNumber, SIG_IGN)
-
-            let source = DispatchSource.makeSignalSource(signal: signalNumber, queue: .main)
-            source.setEventHandler {
-                revert()
-                exit(EXIT_SUCCESS)
-            }
-            source.resume()
-            signalSources.append(source)
-        }
     }
 
     // MARK: Private

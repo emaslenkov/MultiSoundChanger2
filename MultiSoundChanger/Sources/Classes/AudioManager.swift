@@ -9,6 +9,18 @@
 import AudioToolbox
 import Foundation
 
+// MARK: - Model
+
+/// A row in the menu's device list. `isAvailable == false` means the UID is part of the persisted
+/// selection but the HAL doesn't currently report a matching device (unplugged) — drawn greyed out,
+/// still checked (see PLAN-multi-output.md, decision 5).
+struct DeviceRow {
+    let uid: String
+    let name: String
+    let isSelected: Bool
+    let isAvailable: Bool
+}
+
 // MARK: - Protocols
 
 protocol AudioManager: AnyObject {
@@ -19,48 +31,79 @@ protocol AudioManager: AnyObject {
     func setSelectedDeviceVolume(masterChannelLevel: Float, leftChannelLevel: Float, rightChannelLevel: Float)
     func isSelectedDeviceMuted() -> Bool
     func toggleMute()
-    
+
     var isMuted: Bool { get }
+
+    // Multi-output selection (v1.2.0) — see PLAN-multi-output.md
+    func currentDeviceRows() -> [DeviceRow]
+    @discardableResult
+    func toggleSelection(uid: String) -> Bool
+    func selectSingle(uid: String)
+    func restoreSelectionAtLaunch()
 }
 
 // MARK: - Implementation
 
 final class AudioManagerImpl: AudioManager {
-    private let audio: Audio = AudioImpl()
-    private let devices: [AudioDeviceID: String]?
+    private let audio: Audio
+    private let aggregateDeviceManager: AggregateDeviceManager
+
     private var selectedDevice: AudioDeviceID?
-    
-    init() {
-        devices = audio.getOutputDevices()
+
+    /// SSOT for multi-output: ordered UIDs of the devices the user checked. Order matters — index 0
+    /// is the master candidate when the aggregate is (re)built. Size 0 is never persisted past
+    /// `applySelection` — the UI refuses to uncheck the last box (decision 4).
+    private var selection: [String] = []
+    private var lastKnownNames: [String: String] = [:]
+
+    /// Refreshed on every `currentDeviceRows()`/launch call — never cached across menu openings, so
+    /// newly attached/removed devices show up without a restart.
+    private var realDevices: [AudioDeviceID: String] = [:]
+    private var deviceIDByUID: [String: AudioDeviceID] = [:]
+
+    init(audio: Audio, aggregateDeviceManager: AggregateDeviceManager) {
+        self.audio = audio
+        self.aggregateDeviceManager = aggregateDeviceManager
+        self.lastKnownNames = UserDefaults.standard.dictionary(forKey: Constants.UserDefaultsKeys.deviceNamesByUID) as? [String: String] ?? [:]
         printDevices()
     }
-    
+
     func getDefaultOutputDevice() -> AudioDeviceID {
         return audio.getDefaultOutputDevice()
     }
-    
+
+    /// Filters out our own managed aggregate — it is an implementation detail, never a pickable
+    /// output device (PLAN-multi-output.md, A3).
     func getOutputDevices() -> [AudioDeviceID: String]? {
-        return devices
+        guard let rawDevices = audio.getOutputDevices() else {
+            return nil
+        }
+
+        var filtered: [AudioDeviceID: String] = [:]
+        for device in rawDevices where audio.getDeviceUID(deviceID: device.key) != Constants.Aggregate.uid {
+            filtered[device.key] = device.value
+        }
+        return filtered
     }
-    
+
     func isAggregateDevice(deviceID: AudioDeviceID) -> Bool {
         return audio.isAggregateDevice(deviceID: deviceID)
     }
-    
+
     func selectDevice(deviceID: AudioDeviceID) {
         selectedDevice = deviceID
         audio.setOutputDevice(newDeviceID: deviceID)
         Logger.debug(Constants.InnerMessages.selectDevice(deviceID: String(deviceID)))
     }
-    
+
     func getSelectedDeviceVolume() -> Float? {
         guard let selectedDevice = selectedDevice else {
             return nil
         }
-        
+
         if audio.isAggregateDevice(deviceID: selectedDevice) {
             let aggregatedDevices = audio.getAggregateDeviceSubDeviceList(deviceID: selectedDevice)
-            
+
             for device in aggregatedDevices {
                 if audio.isOutputDevice(deviceID: device) {
                     return audio.getDeviceVolume(deviceID: device).max()
@@ -69,22 +112,22 @@ final class AudioManagerImpl: AudioManager {
         } else {
             return audio.getDeviceVolume(deviceID: selectedDevice).max()
         }
-        
+
         return nil
     }
-    
+
     func setSelectedDeviceVolume(masterChannelLevel: Float, leftChannelLevel: Float, rightChannelLevel: Float) {
         guard let selectedDevice = selectedDevice else {
             return
         }
-        
+
         let isMute = masterChannelLevel < Constants.muteVolumeLowerbound
             && leftChannelLevel < Constants.muteVolumeLowerbound
             && rightChannelLevel < Constants.muteVolumeLowerbound
-        
+
         if audio.isAggregateDevice(deviceID: selectedDevice) {
             let aggregatedDevices = audio.getAggregateDeviceSubDeviceList(deviceID: selectedDevice)
-            
+
             for device in aggregatedDevices {
                 audio.setDeviceVolume(
                     deviceID: device,
@@ -104,15 +147,15 @@ final class AudioManagerImpl: AudioManager {
             audio.setDeviceMute(deviceID: selectedDevice, isMute: isMute)
         }
     }
-    
+
     func setSelectedDeviceMute(isMute: Bool) {
         guard let selectedDevice = selectedDevice else {
             return
         }
-        
+
         if audio.isAggregateDevice(deviceID: selectedDevice) {
             let aggregatedDevices = audio.getAggregateDeviceSubDeviceList(deviceID: selectedDevice)
-            
+
             for device in aggregatedDevices {
                 audio.setDeviceMute(deviceID: device, isMute: isMute)
             }
@@ -120,25 +163,25 @@ final class AudioManagerImpl: AudioManager {
             audio.setDeviceMute(deviceID: selectedDevice, isMute: isMute)
         }
     }
-    
+
     func isSelectedDeviceMuted() -> Bool {
         guard let selectedDevice = selectedDevice else {
             return false
         }
-        
+
         if audio.isAggregateDevice(deviceID: selectedDevice) {
             let aggregatedDevices = audio.getAggregateDeviceSubDeviceList(deviceID: selectedDevice)
-            
+
             guard let device = aggregatedDevices.first else {
                 return false
             }
-            
+
             return audio.isDeviceMuted(deviceID: device)
         } else {
             return audio.isDeviceMuted(deviceID: selectedDevice)
         }
     }
-    
+
     func toggleMute() {
         if isSelectedDeviceMuted() {
             setSelectedDeviceMute(isMute: false)
@@ -148,13 +191,184 @@ final class AudioManagerImpl: AudioManager {
             setSelectedDeviceMute(isMute: true)
         }
     }
-    
+
     var isMuted: Bool {
         return isSelectedDeviceMuted()
     }
-    
+
+    // MARK: Multi-output selection
+
+    func currentDeviceRows() -> [DeviceRow] {
+        refreshDevices()
+
+        var seenUIDs = Set<String>()
+        var rows: [DeviceRow] = []
+
+        for (uid, deviceID) in deviceIDByUID {
+            let name = realDevices[deviceID] ?? uid
+            lastKnownNames[uid] = name
+            rows.append(DeviceRow(uid: uid, name: name, isSelected: selection.contains(uid), isAvailable: true))
+            seenUIDs.insert(uid)
+        }
+
+        for uid in selection where !seenUIDs.contains(uid) {
+            let name = lastKnownNames[uid] ?? uid
+            rows.append(DeviceRow(uid: uid, name: name, isSelected: true, isAvailable: false))
+        }
+
+        persistNames()
+
+        return rows.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+    }
+
+    /// Shift-click: toggles membership without ever allowing the set to go empty (decision 4).
+    /// Returns `false` (no-op) when the caller tried to uncheck the last remaining device.
+    @discardableResult
+    func toggleSelection(uid: String) -> Bool {
+        var newSelection = selection
+
+        if let index = newSelection.firstIndex(of: uid) {
+            guard newSelection.count > 1 else {
+                Logger.warning(Constants.InnerMessages.emptySelectionRejected)
+                return false
+            }
+            newSelection.remove(at: index)
+        } else {
+            newSelection.append(uid)
+        }
+
+        applySelection(newSelection)
+        return true
+    }
+
+    /// Plain click: collapses the selection down to exactly this one device.
+    func selectSingle(uid: String) {
+        applySelection([uid])
+    }
+
+    /// Restores the persisted selection at launch, falling back (in order) to: the surviving
+    /// aggregate's own composition (persistence lost but the device is still alive), then the
+    /// system's current default device (fresh install) — so volume control is never left dead.
+    func restoreSelectionAtLaunch() {
+        refreshDevices()
+        let orphanID = aggregateDeviceManager.findOwnDevice()
+
+        var storedSelection = loadPersistedSelection()
+
+        if storedSelection.isEmpty, let orphanID = orphanID {
+            storedSelection = audio.getAggregateFullSubDeviceList(deviceID: orphanID)
+        }
+
+        if storedSelection.isEmpty {
+            guard let defaultUID = audio.getDeviceUID(deviceID: audio.getDefaultOutputDevice()) else {
+                selectedDevice = audio.getDefaultOutputDevice()
+                return
+            }
+            storedSelection = [defaultUID]
+        }
+
+        selection = storedSelection
+        persistSelection()
+
+        let availableUIDs = storedSelection.filter { deviceIDByUID[$0] != nil }
+
+        if availableUIDs.count >= 2 {
+            routeSelection(availableUIDs)
+        } else if let single = availableUIDs.first, let deviceID = deviceIDByUID[single] {
+            selectDevice(deviceID: deviceID)
+        } else {
+            // Nothing from the persisted selection is currently plugged in — leave the selection
+            // untouched (it will be honoured once a device reappears) but keep volume control alive.
+            selectedDevice = audio.getDefaultOutputDevice()
+        }
+    }
+
+    // MARK: Private
+
+    private func applySelection(_ uids: [String]) {
+        selection = uids
+        persistSelection()
+        routeSelection(uids)
+    }
+
+    /// Order matters here (`docs/coreaudio.md` §"без заикания"): configure/create before switching
+    /// default, switch default before destroying, never switch default and destroy in the same step.
+    private func routeSelection(_ uids: [String]) {
+        if uids.count >= 2 {
+            let alreadyOnAggregate = aggregateDeviceManager.deviceID != nil && selectedDevice == aggregateDeviceManager.deviceID
+
+            if alreadyOnAggregate {
+                aggregateDeviceManager.update(subDeviceUIDs: uids)
+                reapplyCurrentVolumeState()
+            } else {
+                let previousVolume = getSelectedDeviceVolume()
+                let wasMuted = isSelectedDeviceMuted()
+
+                guard let aggregateID = aggregateDeviceManager.ensureDevice(subDeviceUIDs: uids) else {
+                    return
+                }
+
+                selectedDevice = aggregateID
+                audio.setOutputDevice(newDeviceID: aggregateID)
+
+                if let previousVolume = previousVolume {
+                    setSelectedDeviceVolume(masterChannelLevel: previousVolume, leftChannelLevel: previousVolume, rightChannelLevel: previousVolume)
+                }
+                if wasMuted {
+                    setSelectedDeviceMute(isMute: true)
+                }
+            }
+        } else if let single = uids.first, let deviceID = deviceIDByUID[single] {
+            let wasMultiOutput = aggregateDeviceManager.deviceID != nil && selectedDevice == aggregateDeviceManager.deviceID
+
+            selectDevice(deviceID: deviceID)
+
+            // Hybrid lifecycle (decision 3): the aggregate is torn down the moment the selection
+            // collapses to a single device, not deferred to app exit — where a live ≥2 selection is
+            // deliberately left standing (see ApplicationController.stop()).
+            if wasMultiOutput {
+                aggregateDeviceManager.destroy()
+            }
+        }
+    }
+
+    private func reapplyCurrentVolumeState() {
+        guard let volume = getSelectedDeviceVolume() else {
+            return
+        }
+        let muted = isSelectedDeviceMuted()
+        setSelectedDeviceVolume(masterChannelLevel: volume, leftChannelLevel: volume, rightChannelLevel: volume)
+        if muted {
+            setSelectedDeviceMute(isMute: true)
+        }
+    }
+
+    private func refreshDevices() {
+        let devices = getOutputDevices() ?? [:]
+        realDevices = devices
+        deviceIDByUID = [:]
+
+        for device in devices {
+            if let uid = audio.getDeviceUID(deviceID: device.key) {
+                deviceIDByUID[uid] = device.key
+            }
+        }
+    }
+
+    private func loadPersistedSelection() -> [String] {
+        return UserDefaults.standard.stringArray(forKey: Constants.UserDefaultsKeys.selectedDeviceUIDs) ?? []
+    }
+
+    private func persistSelection() {
+        UserDefaults.standard.set(selection, forKey: Constants.UserDefaultsKeys.selectedDeviceUIDs)
+    }
+
+    private func persistNames() {
+        UserDefaults.standard.set(lastKnownNames, forKey: Constants.UserDefaultsKeys.deviceNamesByUID)
+    }
+
     private func printDevices() {
-        guard let devices = devices else {
+        guard let devices = getOutputDevices() else {
             return
         }
         Logger.debug(Constants.InnerMessages.outputDevices)

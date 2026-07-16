@@ -18,7 +18,7 @@ enum Constants {
         static let systemPreferences = "com.apple.systempreferences"
         static let audioDevices = "com.apple.audio.AudioMIDISetup"
     }
-    
+
     enum SystemPreferencesPane {
         static let sound = "/System/Library/PreferencePanes/Sound.prefPane"
     }
@@ -26,6 +26,32 @@ enum Constants {
     enum Paths {
         static let shell = "/bin/sh"
         static let hidutil = "/usr/bin/hidutil"
+        static let defaults = "/usr/bin/defaults"
+        static let killall = "/usr/bin/killall"
+    }
+
+    /// Fixed identity of the managed Multi-Output device (v1.2.0) — looked up by UID at every
+    /// launch so a crash-orphaned device is reused instead of duplicated. See `docs/coreaudio.md`.
+    enum Aggregate {
+        static let uid = "io.github.emaslenkov.multisoundchanger2.output"
+        static let name = "MultiSoundChanger2 Output"
+    }
+
+    /// `com.apple.controlcenter` `Sound` key values observed on this machine — see
+    /// `docs/system-integration.md` §3. Not exhaustive across Control Center configurations.
+    enum ControlCenter {
+        static let domain = "com.apple.controlcenter"
+        static let soundKey = "Sound"
+        static let hiddenValue = 2
+        static let processName = "ControlCenter"
+    }
+
+    enum UserDefaultsKeys {
+        static let selectedDeviceUIDs = "selectedDeviceUIDs"
+        static let deviceNamesByUID = "deviceNamesByUID"
+        static let hideSystemVolumeIcon = "hideSystemVolumeIcon"
+        static let savedSystemVolumeIconValue = "savedSystemVolumeIconValue"
+        static let menuBarIconTint = "menuBarIconTint"
     }
 
     enum Notifications {
@@ -77,5 +103,36 @@ enum Constants {
         static func selectedDeviceVolume(volume: String) -> String {
             return "Selected device volume: \(volume)"
         }
+
+        static func aggregateOrphanFound(deviceID: String) -> String {
+            return "Reusing orphaned aggregate device id: \(deviceID)"
+        }
+
+        static func aggregateCreated(deviceID: String) -> String {
+            return "Created aggregate device id: \(deviceID)"
+        }
+
+        static let aggregateCreateError = "Failed to create aggregate device"
+
+        static func aggregateUpdated(uids: [String]) -> String {
+            return "Aggregate device sub-devices updated: \(uids.joined(separator: ", "))"
+        }
+
+        static let aggregateUpdateError = "Failed to update aggregate device sub-device list"
+
+        static func aggregateDestroyed(deviceID: String) -> String {
+            return "Destroyed aggregate device id: \(deviceID)"
+        }
+
+        static let emptySelectionRejected = "Rejected selection change that would leave zero output devices"
+
+        static func systemVolumeIconValue(value: String) -> String {
+            return "System volume icon Control Center value: \(value)"
+        }
+
+        static let systemVolumeIconHidden = "System volume icon hidden"
+        static let systemVolumeIconRestored = "System volume icon restored"
+        static let systemVolumeIconWriteError = "Failed to write com.apple.controlcenter Sound value, leaving icon as-is"
+        static let systemVolumeIconExternallyChanged = "System volume icon value was changed outside the app, not overwriting"
     }
 }

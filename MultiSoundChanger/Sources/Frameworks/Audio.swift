@@ -24,6 +24,16 @@ protocol Audio {
     func getDeviceVolume(deviceID: AudioDeviceID) -> [Float]
     func getDefaultOutputDevice() -> AudioDeviceID
     func getDeviceTransportType(deviceID: AudioDeviceID) -> AudioDevicePropertyID
+    func getDeviceUID(deviceID: AudioDeviceID) -> String?
+    func getDeviceID(byUID uid: String) -> AudioDeviceID?
+    func createAggregateDevice(name: String, uid: String, subDeviceUIDs: [String], masterUID: String) -> AudioDeviceID?
+    @discardableResult
+    func destroyAggregateDevice(deviceID: AudioDeviceID) -> Bool
+    func setAggregateFullSubDeviceList(deviceID: AudioDeviceID, subDeviceUIDs: [String]) -> Bool
+    func getAggregateFullSubDeviceList(deviceID: AudioDeviceID) -> [String]
+    func setAggregateMasterSubDevice(deviceID: AudioDeviceID, masterUID: String) -> Bool
+    @discardableResult
+    func setSubDeviceDriftCompensation(subDeviceID: AudioDeviceID, enabled: Bool) -> Bool
 }
 
 // MARK: - Implementation
@@ -212,10 +222,173 @@ final class AudioImpl: Audio {
             mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
         
         AudioObjectGetPropertyData(deviceID, &propertyAddress, 0, nil, &propertySize, &deviceTransportType)
-        
+
         return deviceTransportType
     }
-    
+
+    /// Same `Unmanaged<CFString>?` ownership pattern as `getDeviceName` — CoreAudio hands back a
+    /// +1 retained reference.
+    func getDeviceUID(deviceID: AudioDeviceID) -> String? {
+        var propertySize = UInt32(MemoryLayout<CFString?>.size)
+
+        var propertyAddress = AudioObjectPropertyAddress(
+            mSelector: AudioObjectPropertySelector(kAudioDevicePropertyDeviceUID),
+            mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeGlobal),
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
+
+        var result: Unmanaged<CFString>?
+
+        let status = AudioObjectGetPropertyData(deviceID, &propertyAddress, 0, nil, &propertySize, &result)
+
+        guard status == noErr, let uid = result?.takeRetainedValue() else {
+            return nil
+        }
+
+        return uid as String
+    }
+
+    /// Returns `nil` both on HAL error and when the UID is unknown to the system
+    /// (`kAudioObjectUnknown`) — callers must not assume a non-nil result belongs to an aggregate
+    /// they created themselves; that verification happens one layer up.
+    func getDeviceID(byUID uid: String) -> AudioDeviceID? {
+        var propertyAddress = AudioObjectPropertyAddress(
+            mSelector: AudioObjectPropertySelector(kAudioHardwarePropertyTranslateUIDToDevice),
+            mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeGlobal),
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
+
+        var deviceID = kAudioObjectUnknown
+        var propertySize = UInt32(MemoryLayout<AudioDeviceID>.size)
+        var uidCF = uid as CFString
+
+        let status = withUnsafeMutablePointer(to: &uidCF) { uidPointer in
+            AudioObjectGetPropertyData(
+                AudioObjectID(kAudioObjectSystemObject),
+                &propertyAddress,
+                UInt32(MemoryLayout<CFString>.size),
+                uidPointer,
+                &propertySize,
+                &deviceID
+            )
+        }
+
+        guard status == noErr, deviceID != kAudioObjectUnknown else {
+            return nil
+        }
+
+        return deviceID
+    }
+
+    /// Builds a Multi-Output device (`stacked: 1` — sound duplicated to every sub-device, as opposed
+    /// to `0` which sums channels into an Aggregate). `private: 0` is required for the device to be
+    /// visible to every app on the system, not just this process — see `docs/coreaudio.md`.
+    /// Drift compensation is set on every non-master sub-device right in the creation description.
+    func createAggregateDevice(name: String, uid: String, subDeviceUIDs: [String], masterUID: String) -> AudioDeviceID? {
+        let subDevices: [[String: Any]] = subDeviceUIDs.map { subDeviceUID in
+            var subDevice: [String: Any] = [kAudioSubDeviceUIDKey: subDeviceUID]
+            if subDeviceUID != masterUID {
+                subDevice[kAudioSubDeviceDriftCompensationKey] = 1
+            }
+            return subDevice
+        }
+
+        let description: [String: Any] = [
+            kAudioAggregateDeviceNameKey: name,
+            kAudioAggregateDeviceUIDKey: uid,
+            kAudioAggregateDeviceSubDeviceListKey: subDevices,
+            kAudioAggregateDeviceMainSubDeviceKey: masterUID,
+            kAudioAggregateDeviceIsPrivateKey: 0,
+            kAudioAggregateDeviceIsStackedKey: 1
+        ]
+
+        var deviceID = kAudioObjectUnknown
+        let status = AudioHardwareCreateAggregateDevice(description as CFDictionary, &deviceID)
+
+        guard status == noErr, deviceID != kAudioObjectUnknown else {
+            return nil
+        }
+
+        return deviceID
+    }
+
+    @discardableResult
+    func destroyAggregateDevice(deviceID: AudioDeviceID) -> Bool {
+        return AudioHardwareDestroyAggregateDevice(deviceID) == noErr
+    }
+
+    /// `FullSubDeviceList` carries neither drift compensation nor a master designation — callers
+    /// must follow up with `setAggregateMasterSubDevice`/`setSubDeviceDriftCompensation` as needed.
+    ///
+    /// Passes the CFArray through `withUnsafePointer(to:)` rather than a bare `&subDevicesArray`:
+    /// the latter compiles but warns ("forming UnsafeRawPointer to a variable that may contain an
+    /// object reference") because the implicit inout-to-raw-pointer conversion isn't scoped the way
+    /// an explicit `withUnsafePointer` closure is.
+    func setAggregateFullSubDeviceList(deviceID: AudioDeviceID, subDeviceUIDs: [String]) -> Bool {
+        var propertyAddress = AudioObjectPropertyAddress(
+            mSelector: AudioObjectPropertySelector(kAudioAggregateDevicePropertyFullSubDeviceList),
+            mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeGlobal),
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
+
+        let subDevicesArray = subDeviceUIDs as CFArray
+        let propertySize = UInt32(MemoryLayout<CFArray>.size)
+
+        let status = withUnsafePointer(to: subDevicesArray) { pointer in
+            AudioObjectSetPropertyData(deviceID, &propertyAddress, 0, nil, propertySize, pointer)
+        }
+
+        return status == noErr
+    }
+
+    func getAggregateFullSubDeviceList(deviceID: AudioDeviceID) -> [String] {
+        var propertyAddress = AudioObjectPropertyAddress(
+            mSelector: AudioObjectPropertySelector(kAudioAggregateDevicePropertyFullSubDeviceList),
+            mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeGlobal),
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
+
+        var propertySize = UInt32(MemoryLayout<CFArray?>.size)
+        var result: Unmanaged<CFArray>?
+
+        let status = AudioObjectGetPropertyData(deviceID, &propertyAddress, 0, nil, &propertySize, &result)
+
+        guard status == noErr, let array = result?.takeRetainedValue() else {
+            return []
+        }
+
+        return (array as? [String]) ?? []
+    }
+
+    /// Changing the master on a currently playing stream causes an audible glitch — callers should
+    /// only call this when the previous master has dropped out, not on every composition change.
+    func setAggregateMasterSubDevice(deviceID: AudioDeviceID, masterUID: String) -> Bool {
+        var propertyAddress = AudioObjectPropertyAddress(
+            mSelector: AudioObjectPropertySelector(kAudioAggregateDevicePropertyMainSubDevice),
+            mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeGlobal),
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
+
+        let masterUIDCF = masterUID as CFString
+        let propertySize = UInt32(MemoryLayout<CFString>.size)
+
+        let status = withUnsafePointer(to: masterUIDCF) { pointer in
+            AudioObjectSetPropertyData(deviceID, &propertyAddress, 0, nil, propertySize, pointer)
+        }
+
+        return status == noErr
+    }
+
+    @discardableResult
+    func setSubDeviceDriftCompensation(subDeviceID: AudioDeviceID, enabled: Bool) -> Bool {
+        var value: UInt32 = enabled ? 1 : 0
+        let propertySize = UInt32(MemoryLayout<UInt32>.size)
+
+        var propertyAddress = AudioObjectPropertyAddress(
+            mSelector: AudioObjectPropertySelector(kAudioSubDevicePropertyDriftCompensation),
+            mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeGlobal),
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
+
+        let status = AudioObjectSetPropertyData(subDeviceID, &propertyAddress, 0, nil, propertySize, &value)
+
+        return status == noErr
+    }
+
     private func getNumberOfDevices() -> UInt32 {
         var propertySize: UInt32 = 0
         
