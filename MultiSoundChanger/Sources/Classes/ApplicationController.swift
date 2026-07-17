@@ -23,10 +23,12 @@ final class ApplicationControllerImp: ApplicationController {
     private lazy var aggregateDeviceManager: AggregateDeviceManager = AggregateDeviceManagerImpl(audio: audio)
     private lazy var audioManager: AudioManager = AudioManagerImpl(audio: audio, aggregateDeviceManager: aggregateDeviceManager)
     private lazy var systemVolumeIconController: SystemVolumeIconController = SystemVolumeIconControllerImpl()
+    private lazy var launchAtLoginController: LaunchAtLoginController = LaunchAtLoginControllerImpl()
     private lazy var mediaManager: MediaManager = MediaManagerImpl(delegate: self)
     private lazy var statusBarController: StatusBarController = StatusBarControllerImpl(
         audioManager: audioManager,
-        systemVolumeIconController: systemVolumeIconController
+        systemVolumeIconController: systemVolumeIconController,
+        launchAtLoginController: launchAtLoginController
     )
 
     func start() {

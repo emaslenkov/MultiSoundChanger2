@@ -8,6 +8,20 @@ Versions below v1.1.0 belong to the upstream project.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] — 2026-07-17
+
+Tagged `v1.4.0-tahoe`, bundle version a plain 1.4.0 as macOS expects.
+
+### Added
+
+- **Launch at login.** A new "Launch at login" checkbox in the menu, right below "Hide system volume
+  icon", starts the app automatically when you log in. It's off by default. The checkmark always
+  reflects the real system state rather than a cached preference, so toggling it in System Settings →
+  General → Login Items is picked up the next time the menu opens, and the app never re-registers
+  itself against a choice you made there. Built on `SMAppService`, which registers the app bundle
+  itself — no separate helper, works with the ad-hoc signature. The item is shown only on macOS 13
+  and later, where `SMAppService` exists; the deployment target stays macOS 11.
+
 ## [1.3.0] — 2026-07-17
 
 Tagged `v1.3.0-tahoe`, bundle version a plain 1.3.0 as macOS expects.

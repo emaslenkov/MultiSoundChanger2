@@ -15,6 +15,7 @@
 "audio.devices" = "Audio Devices...";
 "muted" = "Muted";
 "hide.system.icon" = "Hide system volume icon";
+"launch.at.login" = "Launch at login";
 "icon.tint.header" = "Choose icon style";
 "icon.tint.default" = "Default";
 "icon.tint.blue" = "Blue";

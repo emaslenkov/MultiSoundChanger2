@@ -13,6 +13,7 @@
 		AB1234567890ABCDEF000008 /* MediaKeyRemapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000007 /* MediaKeyRemapper.swift */; };
 		AB1234567890ABCDEF00000A /* AggregateDeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000009 /* AggregateDeviceManager.swift */; };
 		AB1234567890ABCDEF00000C /* SystemVolumeIconController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF00000B /* SystemVolumeIconController.swift */; };
+		AB1234567890ABCDEF000014 /* LaunchAtLoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000013 /* LaunchAtLoginController.swift */; };
 		AB1234567890ABCDEF00000E /* DeviceListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF00000D /* DeviceListView.swift */; };
 		AB1234567890ABCDEF000010 /* IconTintPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF00000F /* IconTintPickerView.swift */; };
 		F312C54E25B3741C00205846 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F373D8C02561D24600642274 /* Main.storyboard */; };
@@ -60,6 +61,7 @@
 		AB1234567890ABCDEF000007 /* MediaKeyRemapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaKeyRemapper.swift; sourceTree = "<group>"; };
 		AB1234567890ABCDEF000009 /* AggregateDeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregateDeviceManager.swift; sourceTree = "<group>"; };
 		AB1234567890ABCDEF00000B /* SystemVolumeIconController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemVolumeIconController.swift; sourceTree = "<group>"; };
+		AB1234567890ABCDEF000013 /* LaunchAtLoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginController.swift; sourceTree = "<group>"; };
 		AB1234567890ABCDEF00000D /* DeviceListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceListView.swift; sourceTree = "<group>"; };
 		AB1234567890ABCDEF00000F /* IconTintPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconTintPickerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -235,6 +237,7 @@
 				F392597B2631ACE700B7AD62 /* Runner.swift */,
 				AB1234567890ABCDEF000007 /* MediaKeyRemapper.swift */,
 				AB1234567890ABCDEF00000B /* SystemVolumeIconController.swift */,
+				AB1234567890ABCDEF000013 /* LaunchAtLoginController.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -336,6 +339,7 @@
 				AB1234567890ABCDEF000008 /* MediaKeyRemapper.swift in Sources */,
 				AB1234567890ABCDEF00000A /* AggregateDeviceManager.swift in Sources */,
 				AB1234567890ABCDEF00000C /* SystemVolumeIconController.swift in Sources */,
+				AB1234567890ABCDEF000014 /* LaunchAtLoginController.swift in Sources */,
 				AB1234567890ABCDEF00000E /* DeviceListView.swift in Sources */,
 				AB1234567890ABCDEF000010 /* IconTintPickerView.swift in Sources */,
 			);
@@ -484,7 +488,7 @@
 				INFOPLIST_FILE = MultiSoundChanger/Other/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.3.0;
+				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.emaslenkov.multisoundchanger2;
 				PRODUCT_NAME = MultiSoundChanger2;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -508,7 +512,7 @@
 				INFOPLIST_FILE = MultiSoundChanger/Other/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.3.0;
+				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.emaslenkov.multisoundchanger2;
 				PRODUCT_NAME = MultiSoundChanger2;
 				PROVISIONING_PROFILE_SPECIFIER = "";

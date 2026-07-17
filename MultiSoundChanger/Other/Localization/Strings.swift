@@ -18,6 +18,7 @@ enum Strings {
     static var audioDevices = NSLocalizedString("audio.devices", comment: "")
     static var muted = NSLocalizedString("muted", comment: "")
     static var hideSystemVolumeIcon = NSLocalizedString("hide.system.icon", comment: "")
+    static var launchAtLogin = NSLocalizedString("launch.at.login", comment: "")
     static var iconTintHeader = NSLocalizedString("icon.tint.header", comment: "")
     static var iconTintDefault = NSLocalizedString("icon.tint.default", comment: "")
     static var iconTintBlue = NSLocalizedString("icon.tint.blue", comment: "")

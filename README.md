@@ -29,6 +29,8 @@ Features:
 * **Tell this app's icon apart from the system one.** Optionally hide the system's own volume icon,
   and/or tint this app's icon (Blue / Orange / Green / Purple / Pink) — both are off by default.
 * **Media keys** (volume up / down / mute) drive the selected device, aggregate included.
+* **Launch at login.** Optionally start the app automatically when you log in (off by default;
+  available on macOS 13+).
 * **Native look** — follows the system light/dark appearance.
 * **Universal binary** — runs natively on Apple Silicon and Intel, macOS 11+ including Tahoe.
 

@@ -31,6 +31,7 @@ extension StatusBarControllerImpl {
         case soundPreferences
         case audioSetup
         case hideSystemIcon
+        case launchAtLogin
         case iconTintHeader
         case iconTint
         case quit
@@ -44,19 +45,26 @@ final class StatusBarControllerImpl: NSObject, StatusBarController {
     private let volumeController: VolumeViewController
     private let audioManager: AudioManager
     private let systemVolumeIconController: SystemVolumeIconController
+    private let launchAtLoginController: LaunchAtLoginController
 
     private let deviceListView = DeviceListView(frame: .zero)
     private let iconTintView = IconTintPickerView()
     private var outputItem: NSMenuItem?
     private var hideSystemIconItem: NSMenuItem?
+    private var launchAtLoginItem: NSMenuItem?
 
     /// The untinted glyph currently matching the volume level; the tint is layered on top of it, so
     /// switching tints re-renders from this base rather than losing the level.
     private var currentBaseImage: NSImage? = Images.volumeImage1
 
-    init(audioManager: AudioManager, systemVolumeIconController: SystemVolumeIconController) {
+    init(
+        audioManager: AudioManager,
+        systemVolumeIconController: SystemVolumeIconController,
+        launchAtLoginController: LaunchAtLoginController
+    ) {
         self.audioManager = audioManager
         self.systemVolumeIconController = systemVolumeIconController
+        self.launchAtLoginController = launchAtLoginController
         self.volumeController = Stories.volume.controller(VolumeViewController.self)
 
         super.init()
@@ -99,6 +107,15 @@ final class StatusBarControllerImpl: NSObject, StatusBarController {
         menu.addItem(soundPreferencesItem)
         menu.addItem(audioSetupItem)
         menu.addItem(hideSystemIconItem)
+
+        // Login-item control only exists on macOS 13+ (SMAppService); below that the feature is
+        // impossible, so the row is omitted rather than shown disabled (ADR A-11).
+        if launchAtLoginController.isAvailable {
+            let launchAtLoginItem = getMenuItem(by: .launchAtLogin)
+            self.launchAtLoginItem = launchAtLoginItem
+            menu.addItem(launchAtLoginItem)
+        }
+
         menu.addItem(secondSeparatorItem)
         menu.addItem(iconTintHeaderItem)
         menu.addItem(iconTintItem)
@@ -213,6 +230,17 @@ final class StatusBarControllerImpl: NSObject, StatusBarController {
             item.state = UserDefaults.standard.bool(forKey: Constants.UserDefaultsKeys.hideSystemVolumeIcon) ? .on : .off
             return item
 
+        case .launchAtLogin:
+            let item = NSMenuItem(
+                title: Strings.launchAtLogin,
+                action: #selector(menuToggleLaunchAtLoginAction),
+                keyEquivalent: Constants.Keys.empty.rawValue
+            )
+            item.target = self
+            // Real system status, not a UserDefaults cache — see ADR A-11.
+            item.state = launchAtLoginController.isEnabled ? .on : .off
+            return item
+
         case .iconTintHeader:
             let item = NSMenuItem(title: Strings.iconTintHeader, action: nil, keyEquivalent: Constants.Keys.empty.rawValue)
             item.isEnabled = false
@@ -324,6 +352,15 @@ final class StatusBarControllerImpl: NSObject, StatusBarController {
     }
 
     @objc
+    private func menuToggleLaunchAtLoginAction(sender: NSMenuItem) {
+        let newValue = sender.state != .on
+        launchAtLoginController.setEnabled(newValue)
+        // Re-read the real status instead of trusting the toggle: on `.requiresApproval` or a failed
+        // `register()` the checkmark must not lie about what the system actually did (ADR A-11).
+        sender.state = launchAtLoginController.isEnabled ? .on : .off
+    }
+
+    @objc
     private func menuQuitAction() {
         NSApplication.shared.terminate(self)
     }
@@ -337,5 +374,7 @@ extension StatusBarControllerImpl: NSMenuDelegate {
     func menuNeedsUpdate(_ menu: NSMenu) {
         refreshDeviceList()
         refreshIconTintPicker()
+        // Reflect a login-item change made in System Settings while our menu was closed.
+        launchAtLoginItem?.state = launchAtLoginController.isEnabled ? .on : .off
     }
 }

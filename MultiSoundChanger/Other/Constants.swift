@@ -134,5 +134,15 @@ enum Constants {
         static let systemVolumeIconRestored = "System volume icon restored"
         static let systemVolumeIconWriteError = "Failed to write com.apple.controlcenter Sound value, leaving icon as-is"
         static let systemVolumeIconExternallyChanged = "System volume icon value was changed outside the app, not overwriting"
+
+        static let launchAtLoginEnabled = "Launch at login enabled"
+        static let launchAtLoginDisabled = "Launch at login disabled"
+        static let launchAtLoginRequiresApproval = "Launch at login requires approval in System Settings > Login Items, not re-registering"
+        static let launchAtLoginNotFound = "Launch at login service not found, app bundle path did not resolve"
+        static let launchAtLoginUnavailable = "Launch at login is unavailable below macOS 13"
+
+        static func launchAtLoginError(error: String) -> String {
+            return "Launch at login registration failed: \(error)"
+        }
     }
 }
