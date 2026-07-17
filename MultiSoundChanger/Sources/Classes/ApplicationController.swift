@@ -40,6 +40,18 @@ final class ApplicationControllerImp: ApplicationController {
 
         statusBarController.createMenu()
         mediaManager.listenMediaKeyTaps()
+
+        // Follow the system default output when it changes from outside the app (headphones
+        // auto-switch, Control Center, another app). The listener fires on the main queue; the
+        // audio manager reconciles our selection, and only a real change refreshes the menu (A-10).
+        audio.addDefaultOutputDeviceListener { [weak self] in
+            guard let self = self else {
+                return
+            }
+            if self.audioManager.reconcileWithSystemDefault() {
+                self.statusBarController.refreshAfterExternalChange()
+            }
+        }
     }
 
     /// Teardown for a clean quit and for SIGTERM/SIGINT (see `AppDelegate`). Deliberately does
@@ -48,6 +60,8 @@ final class ApplicationControllerImp: ApplicationController {
     /// as it happens — a still-active (≥2) selection is meant to be left standing at exit, so
     /// there is nothing left to do here.
     func stop() {
+        audio.removeDefaultOutputDeviceListener()
+
         if UserDefaults.standard.bool(forKey: Constants.UserDefaultsKeys.hideSystemVolumeIcon) {
             systemVolumeIconController.restore()
         }

@@ -15,6 +15,7 @@ protocol StatusBarController: AnyObject {
     func createMenu()
     func changeStatusItemImage(value: Float)
     func updateVolume(value: Float)
+    func refreshAfterExternalChange()
 }
 
 // MARK: - Extensions
@@ -136,6 +137,14 @@ final class StatusBarControllerImpl: NSObject, StatusBarController {
     func updateVolume(value: Float) {
         volumeController.updateSliderVolume(volume: value)
         changeStatusItemImage(value: value)
+    }
+
+    /// Called after `AudioManager.reconcileWithSystemDefault()` has moved the selection to follow an
+    /// external system-default change (A-10). Pulls the menu's checkmarks onto the new `selection`
+    /// and the slider/status-bar icon onto the new device's volume, even while the menu is closed.
+    func refreshAfterExternalChange() {
+        refreshDeviceList()
+        refreshVolumeDisplay()
     }
 
     private func getMenuItem(by type: MenuItem) -> NSMenuItem {

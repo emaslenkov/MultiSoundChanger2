@@ -34,11 +34,17 @@ protocol Audio {
     func setAggregateMasterSubDevice(deviceID: AudioDeviceID, masterUID: String) -> Bool
     @discardableResult
     func setSubDeviceDriftCompensation(subDeviceID: AudioDeviceID, enabled: Bool) -> Bool
+    func addDefaultOutputDeviceListener(handler: @escaping () -> Void)
+    func removeDefaultOutputDeviceListener()
 }
 
 // MARK: - Implementation
 
 final class AudioImpl: Audio {
+    /// Retained so the matching `AudioObjectRemovePropertyListenerBlock` can be issued at teardown —
+    /// the block identity must be the same object passed to `Add`, otherwise removal is a no-op.
+    private var defaultOutputListenerBlock: AudioObjectPropertyListenerBlock?
+
     func getOutputDevices() -> [AudioDeviceID: String]? {
         var result: [AudioDeviceID: String] = [:]
         let devices = getAllDevices()
@@ -387,6 +393,54 @@ final class AudioImpl: Audio {
         let status = AudioObjectSetPropertyData(subDeviceID, &propertyAddress, 0, nil, propertySize, &value)
 
         return status == noErr
+    }
+
+    /// Fires `handler` on the main queue whenever the system default output device changes — headphones
+    /// auto-switch, a Control Center pick, or another app taking over. Same property address as
+    /// `getDefaultOutputDevice`. Idempotent: a previous registration is removed first so we never stack
+    /// two blocks on the same object.
+    func addDefaultOutputDeviceListener(handler: @escaping () -> Void) {
+        removeDefaultOutputDeviceListener()
+
+        var propertyAddress = AudioObjectPropertyAddress(
+            mSelector: AudioObjectPropertySelector(kAudioHardwarePropertyDefaultOutputDevice),
+            mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeGlobal),
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
+
+        let block: AudioObjectPropertyListenerBlock = { _, _ in
+            handler()
+        }
+
+        let status = AudioObjectAddPropertyListenerBlock(
+            AudioObjectID(kAudioObjectSystemObject),
+            &propertyAddress,
+            DispatchQueue.main,
+            block
+        )
+
+        if status == noErr {
+            defaultOutputListenerBlock = block
+        }
+    }
+
+    func removeDefaultOutputDeviceListener() {
+        guard let block = defaultOutputListenerBlock else {
+            return
+        }
+
+        var propertyAddress = AudioObjectPropertyAddress(
+            mSelector: AudioObjectPropertySelector(kAudioHardwarePropertyDefaultOutputDevice),
+            mScope: AudioObjectPropertyScope(kAudioObjectPropertyScopeGlobal),
+            mElement: AudioObjectPropertyElement(kAudioObjectPropertyElementMain))
+
+        AudioObjectRemovePropertyListenerBlock(
+            AudioObjectID(kAudioObjectSystemObject),
+            &propertyAddress,
+            DispatchQueue.main,
+            block
+        )
+
+        defaultOutputListenerBlock = nil
     }
 
     private func getNumberOfDevices() -> UInt32 {

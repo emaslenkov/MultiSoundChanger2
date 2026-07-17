@@ -22,6 +22,10 @@ Features:
   set without closing the menu. A device that gets unplugged stays selected and is picked back up
   when it returns.
 * **Switch the default output device** right from the menu.
+* **Follows the system output.** When macOS switches outputs on its own — AirPods connecting, a pick
+  in Control Center, another app taking over — the menu's checkmarks, slider and icon move to the new
+  device to match. If you had a multi-output going, it's remembered and rebuilt once the intercepting
+  device (e.g. AirPods) disconnects.
 * **Tell this app's icon apart from the system one.** Optionally hide the system's own volume icon,
   and/or tint this app's icon (Blue / Orange / Green / Purple / Pink) — both are off by default.
 * **Media keys** (volume up / down / mute) drive the selected device, aggregate included.

@@ -40,6 +40,10 @@ protocol AudioManager: AnyObject {
     func toggleSelection(uid: String) -> Bool
     func selectSingle(uid: String)
     func restoreSelectionAtLaunch()
+
+    /// Reconciles our selection with an externally-changed system default output (v1.3.0, A-10).
+    /// Returns `true` when state changed so the caller refreshes the UI.
+    func reconcileWithSystemDefault() -> Bool
 }
 
 // MARK: - Implementation
@@ -55,6 +59,12 @@ final class AudioManagerImpl: AudioManager {
     /// `applySelection` — the UI refuses to uncheck the last box (decision 4).
     private var selection: [String] = []
     private var lastKnownNames: [String: String] = [:]
+
+    /// Multi-output we auto-left when the system pulled the default onto a single interceptor device
+    /// (e.g. AirPods). Memory-only, never persisted. Set when the follow branch abandons a ≥2 set,
+    /// consumed by the restore branch when the interceptor drops out, and cleared by any manual pick —
+    /// an explicit user choice cancels "put the old set back". See A-10.
+    private var rememberedMultiSelection: [String]?
 
     /// Refreshed on every `currentDeviceRows()`/launch call — never cached across menu openings, so
     /// newly attached/removed devices show up without a restart.
@@ -237,12 +247,14 @@ final class AudioManagerImpl: AudioManager {
             newSelection.append(uid)
         }
 
+        rememberedMultiSelection = nil
         applySelection(newSelection)
         return true
     }
 
     /// Plain click: collapses the selection down to exactly this one device.
     func selectSingle(uid: String) {
+        rememberedMultiSelection = nil
         applySelection([uid])
     }
 
@@ -267,23 +279,78 @@ final class AudioManagerImpl: AudioManager {
             storedSelection = [defaultUID]
         }
 
-        selection = storedSelection
+        commitSelectionRoutingAvailable(storedSelection)
+    }
+
+    /// Reacts to the system default output being changed from outside the app (headphones
+    /// auto-switch, Control Center, another app). Called on the main queue from the HAL listener;
+    /// returns `true` when it mutated state so the caller refreshes the menu. See A-10.
+    func reconcileWithSystemDefault() -> Bool {
+        let defaultID = audio.getDefaultOutputDevice()
+
+        // Our own aggregate is default because *we* just routed to it — following it would loop.
+        // Belt-and-braces: match both by cached deviceID and by the fixed UID.
+        if let aggregateID = aggregateDeviceManager.deviceID, defaultID == aggregateID {
+            return false
+        }
+        guard let defaultUID = audio.getDeviceUID(deviceID: defaultID) else {
+            return false
+        }
+        if defaultUID == Constants.Aggregate.uid {
+            return false
+        }
+
+        refreshDevices()
+        let liveUIDs = Set(deviceIDByUID.keys)
+
+        // Already in sync — our own write echoing back, or a duplicate event. Refresh the routed
+        // device (so volume reads hit the right target) but report no change.
+        if selection == [defaultUID] {
+            selectedDevice = defaultID
+            return false
+        }
+
+        // Restore branch: we followed the system onto a single interceptor (AirPods), it has now
+        // dropped out of the live set, and we still remember the multi-output it displaced —
+        // rebuild it.
+        if let remembered = rememberedMultiSelection,
+            selection.count == 1,
+            let current = selection.first,
+            !liveUIDs.contains(current) {
+            rememberedMultiSelection = nil
+            commitSelectionRoutingAvailable(remembered)
+            return true
+        }
+
+        // Follow branch: adopt the system default as a single selection. If we are leaving a live
+        // multi-output, remember it first so unplugging the interceptor can bring it back.
+        if selection.count >= 2 {
+            rememberedMultiSelection = selection
+        }
+        applySelection([defaultUID])
+        return true
+    }
+
+    // MARK: Private
+
+    /// Commits `uids` as the SSOT selection (persisted; unplugged UIDs stay as greyed-out rows,
+    /// decision 5) and routes audio to whichever subset is currently plugged in — ≥2 rebuilds the
+    /// aggregate, exactly 1 switches straight to it, 0 falls back to the system default so volume
+    /// control is never left dead. Shared by launch restore and the A-10 multi-output restore.
+    private func commitSelectionRoutingAvailable(_ uids: [String]) {
+        selection = uids
         persistSelection()
 
-        let availableUIDs = storedSelection.filter { deviceIDByUID[$0] != nil }
+        let availableUIDs = uids.filter { deviceIDByUID[$0] != nil }
 
         if availableUIDs.count >= 2 {
             routeSelection(availableUIDs)
         } else if let single = availableUIDs.first, let deviceID = deviceIDByUID[single] {
             selectDevice(deviceID: deviceID)
         } else {
-            // Nothing from the persisted selection is currently plugged in — leave the selection
-            // untouched (it will be honoured once a device reappears) but keep volume control alive.
             selectedDevice = audio.getDefaultOutputDevice()
         }
     }
-
-    // MARK: Private
 
     private func applySelection(_ uids: [String]) {
         selection = uids

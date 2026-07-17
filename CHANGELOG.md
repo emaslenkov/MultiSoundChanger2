@@ -8,6 +8,25 @@ Versions below v1.1.0 belong to the upstream project.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] — 2026-07-17
+
+Tagged `v1.3.0-tahoe`, bundle version a plain 1.3.0 as macOS expects.
+
+### Added
+
+- **The app now follows the system output device.** Previously it only ever *set* the default output
+  and never listened for it changing, so when the system switched outputs on its own — AirPods
+  connecting and macOS auto-switching to them, a pick in Control Center, another app taking over — the
+  menu's checkmarks stayed on the old selection while sound already played elsewhere. A listener on
+  `kAudioHardwarePropertyDefaultOutputDevice` now reconciles the selection with whatever the system
+  considers default, moving the checkmarks, slider and menu-bar icon onto the new device even while
+  the menu is closed. The app's own writes are filtered out, so there is no feedback loop.
+- **Multi-output is remembered and restored across an interception.** If the system pulls the default
+  onto a single device (AirPods) while a ≥2-device multi-output was active, that set is remembered;
+  unplugging the interceptor rebuilds the previous multi-output (same aggregate, by fixed UID) instead
+  of leaving you on a single device. A manual pick in the menu clears that memory — an explicit choice
+  cancels "put the old set back".
+
 ## [1.2.0] — 2026-07-16
 
 Tagged `v1.2.0-tahoe`, bundle version a plain 1.2.0 as macOS expects.
