@@ -51,6 +51,7 @@ protocol AudioManager: AnyObject {
 final class AudioManagerImpl: AudioManager {
     private let audio: Audio
     private let aggregateDeviceManager: AggregateDeviceManager
+    private let defaults: UserDefaults
 
     private var selectedDevice: AudioDeviceID?
 
@@ -71,10 +72,11 @@ final class AudioManagerImpl: AudioManager {
     private var realDevices: [AudioDeviceID: String] = [:]
     private var deviceIDByUID: [String: AudioDeviceID] = [:]
 
-    init(audio: Audio, aggregateDeviceManager: AggregateDeviceManager) {
+    init(audio: Audio, aggregateDeviceManager: AggregateDeviceManager, defaults: UserDefaults = .standard) {
         self.audio = audio
         self.aggregateDeviceManager = aggregateDeviceManager
-        self.lastKnownNames = UserDefaults.standard.dictionary(forKey: Constants.UserDefaultsKeys.deviceNamesByUID) as? [String: String] ?? [:]
+        self.defaults = defaults
+        self.lastKnownNames = defaults.dictionary(forKey: Constants.UserDefaultsKeys.deviceNamesByUID) as? [String: String] ?? [:]
         printDevices()
     }
 
@@ -423,15 +425,15 @@ final class AudioManagerImpl: AudioManager {
     }
 
     private func loadPersistedSelection() -> [String] {
-        return UserDefaults.standard.stringArray(forKey: Constants.UserDefaultsKeys.selectedDeviceUIDs) ?? []
+        return defaults.stringArray(forKey: Constants.UserDefaultsKeys.selectedDeviceUIDs) ?? []
     }
 
     private func persistSelection() {
-        UserDefaults.standard.set(selection, forKey: Constants.UserDefaultsKeys.selectedDeviceUIDs)
+        defaults.set(selection, forKey: Constants.UserDefaultsKeys.selectedDeviceUIDs)
     }
 
     private func persistNames() {
-        UserDefaults.standard.set(lastKnownNames, forKey: Constants.UserDefaultsKeys.deviceNamesByUID)
+        defaults.set(lastKnownNames, forKey: Constants.UserDefaultsKeys.deviceNamesByUID)
     }
 
     private func printDevices() {
