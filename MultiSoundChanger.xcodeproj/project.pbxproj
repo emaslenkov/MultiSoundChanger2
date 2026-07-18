@@ -7,15 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		42F16CFECBBDA470387FB729 /* SmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAF6EBF4BC908C3180F3342 /* SmokeTests.swift */; };
 		4743EFAB1E91493B0032F5AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4743EFAA1E91493B0032F5AA /* AppDelegate.swift */; };
 		AB1234567890ABCDEF000003 /* MediaKeyTap in Frameworks */ = {isa = PBXBuildFile; productRef = AB1234567890ABCDEF000002 /* MediaKeyTap */; };
 		AB1234567890ABCDEF000006 /* VolumeHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000005 /* VolumeHUD.swift */; };
 		AB1234567890ABCDEF000008 /* MediaKeyRemapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000007 /* MediaKeyRemapper.swift */; };
 		AB1234567890ABCDEF00000A /* AggregateDeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000009 /* AggregateDeviceManager.swift */; };
 		AB1234567890ABCDEF00000C /* SystemVolumeIconController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF00000B /* SystemVolumeIconController.swift */; };
-		AB1234567890ABCDEF000014 /* LaunchAtLoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000013 /* LaunchAtLoginController.swift */; };
 		AB1234567890ABCDEF00000E /* DeviceListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF00000D /* DeviceListView.swift */; };
 		AB1234567890ABCDEF000010 /* IconTintPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF00000F /* IconTintPickerView.swift */; };
+		AB1234567890ABCDEF000014 /* LaunchAtLoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000013 /* LaunchAtLoginController.swift */; };
+		AE946A2DF3EEBF8C4E49D8BD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61FB35F8F4B376C7907BAE5D /* Cocoa.framework */; };
 		F312C54E25B3741C00205846 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F373D8C02561D24600642274 /* Main.storyboard */; };
 		F312C55025B3742200205846 /* Volume.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F373D8BC2561D22000642274 /* Volume.storyboard */; };
 		F3433FCB25B36E16009AAE86 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3433FCA25B36E16009AAE86 /* Images.swift */; };
@@ -35,9 +37,29 @@
 		F392597C2631ACE700B7AD62 /* Runner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F392597B2631ACE700B7AD62 /* Runner.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		9B14F72DFD1682F7F0C762C5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4743EF9F1E91493B0032F5AA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4743EFA61E91493B0032F5AA;
+			remoteInfo = MultiSoundChanger;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		4743EFA71E91493B0032F5AA /* MultiSoundChanger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiSoundChanger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4743EFAA1E91493B0032F5AA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		61FB35F8F4B376C7907BAE5D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		A0D176BEF64C403EF03E64CC /* MultiSoundChangerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MultiSoundChangerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB1234567890ABCDEF000005 /* VolumeHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeHUD.swift; sourceTree = "<group>"; };
+		AB1234567890ABCDEF000007 /* MediaKeyRemapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaKeyRemapper.swift; sourceTree = "<group>"; };
+		AB1234567890ABCDEF000009 /* AggregateDeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregateDeviceManager.swift; sourceTree = "<group>"; };
+		AB1234567890ABCDEF00000B /* SystemVolumeIconController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemVolumeIconController.swift; sourceTree = "<group>"; };
+		AB1234567890ABCDEF00000D /* DeviceListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceListView.swift; sourceTree = "<group>"; };
+		AB1234567890ABCDEF00000F /* IconTintPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconTintPickerView.swift; sourceTree = "<group>"; };
+		AB1234567890ABCDEF000013 /* LaunchAtLoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginController.swift; sourceTree = "<group>"; };
+		DDAF6EBF4BC908C3180F3342 /* SmokeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SmokeTests.swift; sourceTree = "<group>"; };
 		F3433FCA25B36E16009AAE86 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		F373D8B02561D1A600642274 /* StatusBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		F373D8B12561D1A600642274 /* AudioManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
@@ -57,13 +79,6 @@
 		F3925974262F2B8000B7AD62 /* ApplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationController.swift; sourceTree = "<group>"; };
 		F3925978262F2F9F00B7AD62 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		F392597B2631ACE700B7AD62 /* Runner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Runner.swift; sourceTree = "<group>"; };
-		AB1234567890ABCDEF000005 /* VolumeHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeHUD.swift; sourceTree = "<group>"; };
-		AB1234567890ABCDEF000007 /* MediaKeyRemapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaKeyRemapper.swift; sourceTree = "<group>"; };
-		AB1234567890ABCDEF000009 /* AggregateDeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregateDeviceManager.swift; sourceTree = "<group>"; };
-		AB1234567890ABCDEF00000B /* SystemVolumeIconController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemVolumeIconController.swift; sourceTree = "<group>"; };
-		AB1234567890ABCDEF000013 /* LaunchAtLoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginController.swift; sourceTree = "<group>"; };
-		AB1234567890ABCDEF00000D /* DeviceListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceListView.swift; sourceTree = "<group>"; };
-		AB1234567890ABCDEF00000F /* IconTintPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconTintPickerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,15 +90,33 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		656DFD4820DAF032417B0809 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AE946A2DF3EEBF8C4E49D8BD /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		42E00C1779F420CDB49507BA /* MultiSoundChangerTests */ = {
+			isa = PBXGroup;
+			children = (
+				DDAF6EBF4BC908C3180F3342 /* SmokeTests.swift */,
+			);
+			name = MultiSoundChangerTests;
+			path = MultiSoundChangerTests;
+			sourceTree = SOURCE_ROOT;
+		};
 		4743EF9E1E91493B0032F5AA = {
 			isa = PBXGroup;
 			children = (
 				4743EFA91E91493B0032F5AA /* MultiSoundChanger */,
 				4743EFA81E91493B0032F5AA /* Products */,
 				83889335DD9089B748A33010 /* Frameworks */,
+				42E00C1779F420CDB49507BA /* MultiSoundChangerTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -91,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				4743EFA71E91493B0032F5AA /* MultiSoundChanger.app */,
+				A0D176BEF64C403EF03E64CC /* MultiSoundChangerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -125,8 +159,33 @@
 		83889335DD9089B748A33010 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EDF3B9BC1EE641244D95DBDD /* OS X */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		AB1234567890ABCDEF000011 /* DeviceList */ = {
+			isa = PBXGroup;
+			children = (
+				AB1234567890ABCDEF00000D /* DeviceListView.swift */,
+			);
+			path = DeviceList;
+			sourceTree = "<group>";
+		};
+		AB1234567890ABCDEF000012 /* IconTint */ = {
+			isa = PBXGroup;
+			children = (
+				AB1234567890ABCDEF00000F /* IconTintPickerView.swift */,
+			);
+			path = IconTint;
+			sourceTree = "<group>";
+		};
+		EDF3B9BC1EE641244D95DBDD /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				61FB35F8F4B376C7907BAE5D /* Cocoa.framework */,
+			);
+			name = "OS X";
 			sourceTree = "<group>";
 		};
 		F373D8A22561D10800642274 /* AppDelegate */ = {
@@ -182,22 +241,6 @@
 				F373D8BD2561D22000642274 /* VolumeViewController.swift */,
 			);
 			path = Volume;
-			sourceTree = "<group>";
-		};
-		AB1234567890ABCDEF000011 /* DeviceList */ = {
-			isa = PBXGroup;
-			children = (
-				AB1234567890ABCDEF00000D /* DeviceListView.swift */,
-			);
-			path = DeviceList;
-			sourceTree = "<group>";
-		};
-		AB1234567890ABCDEF000012 /* IconTint */ = {
-			isa = PBXGroup;
-			children = (
-				AB1234567890ABCDEF00000F /* IconTintPickerView.swift */,
-			);
-			path = IconTint;
 			sourceTree = "<group>";
 		};
 		F373D8B92561D1F200642274 /* Main */ = {
@@ -265,6 +308,24 @@
 			productReference = 4743EFA71E91493B0032F5AA /* MultiSoundChanger.app */;
 			productType = "com.apple.product-type.application";
 		};
+		7D38D692B882FBDA90D27178 /* MultiSoundChangerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8976DD74ABEC1BBA97495539 /* Build configuration list for PBXNativeTarget "MultiSoundChangerTests" */;
+			buildPhases = (
+				3BF92F448AC3228AF84F2A47 /* Sources */,
+				656DFD4820DAF032417B0809 /* Frameworks */,
+				ED2DD36148E4E4770A586BF4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				01E35CF43A1D387BE6D69333 /* PBXTargetDependency */,
+			);
+			name = MultiSoundChangerTests;
+			productName = MultiSoundChangerTests;
+			productReference = A0D176BEF64C403EF03E64CC /* MultiSoundChangerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -291,13 +352,14 @@
 			);
 			mainGroup = 4743EF9E1E91493B0032F5AA;
 			packageReferences = (
-				AB1234567890ABCDEF000004 /* XCLocalSwiftPackageReference "Vendor/MediaKeyTap" */,
+				AB1234567890ABCDEF000004 /* XCLocalSwiftPackageReference "MediaKeyTap" */,
 			);
 			productRefGroup = 4743EFA81E91493B0032F5AA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				4743EFA61E91493B0032F5AA /* MultiSoundChanger */,
+				7D38D692B882FBDA90D27178 /* MultiSoundChangerTests */,
 			);
 		};
 /* End PBXProject section */
@@ -314,9 +376,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		ED2DD36148E4E4770A586BF4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		3BF92F448AC3228AF84F2A47 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42F16CFECBBDA470387FB729 /* SmokeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4743EFA31E91493B0032F5AA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -346,6 +423,15 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		01E35CF43A1D387BE6D69333 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MultiSoundChanger;
+			target = 4743EFA61E91493B0032F5AA /* MultiSoundChanger */;
+			targetProxy = 9B14F72DFD1682F7F0C762C5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		F373D8C02561D24600642274 /* Main.storyboard */ = {
@@ -486,7 +572,10 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = MultiSoundChanger/Other/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.emaslenkov.multisoundchanger2;
@@ -510,7 +599,10 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = MultiSoundChanger/Other/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.emaslenkov.multisoundchanger2;
@@ -520,6 +612,48 @@
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
+		};
+		4754987E449E5B72DE4F62B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.emaslenkov.multisoundchanger2.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MultiSoundChanger2.app/Contents/MacOS/MultiSoundChanger2";
+			};
+			name = Release;
+		};
+		497F88C06C4712930140CA3F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.emaslenkov.multisoundchanger2.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MultiSoundChanger2.app/Contents/MacOS/MultiSoundChanger2";
+			};
+			name = Debug;
 		};
 /* End XCBuildConfiguration section */
 
@@ -542,10 +676,19 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		8976DD74ABEC1BBA97495539 /* Build configuration list for PBXNativeTarget "MultiSoundChangerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4754987E449E5B72DE4F62B8 /* Release */,
+				497F88C06C4712930140CA3F /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		AB1234567890ABCDEF000004 /* XCLocalSwiftPackageReference "Vendor/MediaKeyTap" */ = {
+		AB1234567890ABCDEF000004 /* XCLocalSwiftPackageReference "MediaKeyTap" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Vendor/MediaKeyTap;
 		};

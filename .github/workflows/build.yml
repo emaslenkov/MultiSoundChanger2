@@ -2,6 +2,7 @@ name: Build and Release
 
 on:
   push:
+    branches: [ master ]
     tags:
       - 'v*'
   # Lets contributors verify a build without cutting a release.
@@ -27,6 +28,18 @@ jobs:
         run: |
           xcodebuild -version
           swift --version
+
+      - name: Unit tests
+        run: |
+          # Hosted unit-test bundle (Swift Testing). The host app has a guard that keeps it inert
+          # under XCTest so a test run never touches hidutil / CoreAudio / Control Center.
+          xcodebuild test \
+            -project MultiSoundChanger.xcodeproj \
+            -scheme MultiSoundChanger \
+            -destination 'platform=macOS' \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
 
       - name: Build (Release, universal)
         run: |
