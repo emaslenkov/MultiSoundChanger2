@@ -110,7 +110,7 @@ final class AudioImpl: Audio {
     
     func setDeviceVolume(deviceID: AudioDeviceID, masterChannelLevel: Float, leftChannelLevel: Float, rightChannelLevel: Float) {
         var leftLevel = leftChannelLevel
-        var rigthLevel = rightChannelLevel
+        var rightLevel = rightChannelLevel
         var masterLevel = masterChannelLevel
         
         var masterLevelPropertyAddress = AudioObjectPropertyAddress(
@@ -140,7 +140,7 @@ final class AudioImpl: Audio {
         AudioObjectSetPropertyData(deviceID, &leftLevelPropertyAddress, 0, nil, size, &leftLevel)
         
         AudioObjectGetPropertyDataSize(deviceID, &rightLevelPropertyAddress, 0, nil, &size)
-        AudioObjectSetPropertyData(deviceID, &rightLevelPropertyAddress, 0, nil, size, &rigthLevel)
+        AudioObjectSetPropertyData(deviceID, &rightLevelPropertyAddress, 0, nil, size, &rightLevel)
     }
     
     func setDeviceMute(deviceID: AudioDeviceID, isMute: Bool) {
@@ -169,7 +169,7 @@ final class AudioImpl: Audio {
     
     func getDeviceVolume(deviceID: AudioDeviceID) -> [Float] {
         var leftLevel = Float32(0)
-        var rigthLevel = Float32(0)
+        var rightLevel = Float32(0)
         var masterLevel = Float32(0)
         
         var masterLevelPropertyAddress = AudioObjectPropertyAddress(
@@ -199,9 +199,9 @@ final class AudioImpl: Audio {
         AudioObjectGetPropertyData(deviceID, &leftLevelPropertyAddress, 0, nil, &size, &leftLevel)
         
         AudioObjectGetPropertyDataSize(deviceID, &rightLevelPropertyAddress, 0, nil, &size)
-        AudioObjectGetPropertyData(deviceID, &rightLevelPropertyAddress, 0, nil, &size, &rigthLevel)
+        AudioObjectGetPropertyData(deviceID, &rightLevelPropertyAddress, 0, nil, &size, &rightLevel)
         
-        return [masterLevel, leftLevel, rigthLevel]
+        return [masterLevel, leftLevel, rightLevel]
     }
     
     func getDefaultOutputDevice() -> AudioDeviceID {

@@ -9,9 +9,12 @@
 /* Begin PBXBuildFile section */
 		0CCD9A831D5226CA59E0BA4F /* TestScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89F808B1AAF479084BC465B /* TestScene.swift */; };
 		242B7466B900EF2A9666DA86 /* AggregateDeviceManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1DDC2D21ADE94CD69B0966 /* AggregateDeviceManagerTests.swift */; };
+		341E8A3500EB457D8DF89D42 /* VolumeMathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A37CFF526B5E27AC100851 /* VolumeMathTests.swift */; };
 		42F16CFECBBDA470387FB729 /* SmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAF6EBF4BC908C3180F3342 /* SmokeTests.swift */; };
 		4743EFAB1E91493B0032F5AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4743EFAA1E91493B0032F5AA /* AppDelegate.swift */; };
 		5B19B599B5B7D04D84DA3F98 /* FakeAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9447387A84744D0EEE94C906 /* FakeAudio.swift */; };
+		6579173C5B5DF455DA630E89 /* SystemVolumeIconControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF39F5AE64D795A42964DB68 /* SystemVolumeIconControllerTests.swift */; };
+		7B932A673C06713AEB988A5F /* MediaKeyRemapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D3E2B21CC48DEE4E3CFF45 /* MediaKeyRemapperTests.swift */; };
 		AB1234567890ABCDEF000003 /* MediaKeyTap in Frameworks */ = {isa = PBXBuildFile; productRef = AB1234567890ABCDEF000002 /* MediaKeyTap */; };
 		AB1234567890ABCDEF000006 /* VolumeHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000005 /* VolumeHUD.swift */; };
 		AB1234567890ABCDEF000008 /* MediaKeyRemapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF000007 /* MediaKeyRemapper.swift */; };
@@ -24,6 +27,7 @@
 		B406CE3905EC4FCB0B354263 /* AudioManagerSelectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3CEE2F02BECB0A7BEDD81E1 /* AudioManagerSelectionTests.swift */; };
 		E5AC11609D3CBF175DAE2523 /* AudioManagerReconcileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94FF27CD597D8385F265FFA /* AudioManagerReconcileTests.swift */; };
 		E82CC5CF09459DF0594A1690 /* AudioManagerVolumeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF8099D775EFFF465782B8E /* AudioManagerVolumeTests.swift */; };
+		EED8FCD6CEF0547A5840E211 /* VolumeMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355D1FDBAA9BF1B2EF9AE940 /* VolumeMath.swift */; };
 		F312C54E25B3741C00205846 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F373D8C02561D24600642274 /* Main.storyboard */; };
 		F312C55025B3742200205846 /* Volume.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F373D8BC2561D22000642274 /* Volume.storyboard */; };
 		F3433FCB25B36E16009AAE86 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3433FCA25B36E16009AAE86 /* Images.swift */; };
@@ -54,10 +58,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		355D1FDBAA9BF1B2EF9AE940 /* VolumeMath.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VolumeMath.swift; sourceTree = "<group>"; };
 		4743EFA71E91493B0032F5AA /* MultiSoundChanger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiSoundChanger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4743EFAA1E91493B0032F5AA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4DF8099D775EFFF465782B8E /* AudioManagerVolumeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AudioManagerVolumeTests.swift; sourceTree = "<group>"; };
 		61FB35F8F4B376C7907BAE5D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		71A37CFF526B5E27AC100851 /* VolumeMathTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VolumeMathTests.swift; sourceTree = "<group>"; };
 		9447387A84744D0EEE94C906 /* FakeAudio.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FakeAudio.swift; path = Support/FakeAudio.swift; sourceTree = "<group>"; };
 		A0D176BEF64C403EF03E64CC /* MultiSoundChangerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MultiSoundChangerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA1DDC2D21ADE94CD69B0966 /* AggregateDeviceManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AggregateDeviceManagerTests.swift; sourceTree = "<group>"; };
@@ -69,8 +75,10 @@
 		AB1234567890ABCDEF00000F /* IconTintPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconTintPickerView.swift; sourceTree = "<group>"; };
 		AB1234567890ABCDEF000013 /* LaunchAtLoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginController.swift; sourceTree = "<group>"; };
 		B3CEE2F02BECB0A7BEDD81E1 /* AudioManagerSelectionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AudioManagerSelectionTests.swift; sourceTree = "<group>"; };
+		C3D3E2B21CC48DEE4E3CFF45 /* MediaKeyRemapperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaKeyRemapperTests.swift; sourceTree = "<group>"; };
 		C89F808B1AAF479084BC465B /* TestScene.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TestScene.swift; path = Support/TestScene.swift; sourceTree = "<group>"; };
 		C94FF27CD597D8385F265FFA /* AudioManagerReconcileTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AudioManagerReconcileTests.swift; sourceTree = "<group>"; };
+		CF39F5AE64D795A42964DB68 /* SystemVolumeIconControllerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SystemVolumeIconControllerTests.swift; sourceTree = "<group>"; };
 		DDAF6EBF4BC908C3180F3342 /* SmokeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SmokeTests.swift; sourceTree = "<group>"; };
 		F3433FCA25B36E16009AAE86 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		F373D8B02561D1A600642274 /* StatusBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
@@ -123,6 +131,9 @@
 				4DF8099D775EFFF465782B8E /* AudioManagerVolumeTests.swift */,
 				9447387A84744D0EEE94C906 /* FakeAudio.swift */,
 				C89F808B1AAF479084BC465B /* TestScene.swift */,
+				C3D3E2B21CC48DEE4E3CFF45 /* MediaKeyRemapperTests.swift */,
+				CF39F5AE64D795A42964DB68 /* SystemVolumeIconControllerTests.swift */,
+				71A37CFF526B5E27AC100851 /* VolumeMathTests.swift */,
 			);
 			name = MultiSoundChangerTests;
 			path = MultiSoundChangerTests;
@@ -299,6 +310,7 @@
 				AB1234567890ABCDEF000007 /* MediaKeyRemapper.swift */,
 				AB1234567890ABCDEF00000B /* SystemVolumeIconController.swift */,
 				AB1234567890ABCDEF000013 /* LaunchAtLoginController.swift */,
+				355D1FDBAA9BF1B2EF9AE940 /* VolumeMath.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -415,6 +427,9 @@
 				E82CC5CF09459DF0594A1690 /* AudioManagerVolumeTests.swift in Sources */,
 				5B19B599B5B7D04D84DA3F98 /* FakeAudio.swift in Sources */,
 				0CCD9A831D5226CA59E0BA4F /* TestScene.swift in Sources */,
+				7B932A673C06713AEB988A5F /* MediaKeyRemapperTests.swift in Sources */,
+				6579173C5B5DF455DA630E89 /* SystemVolumeIconControllerTests.swift in Sources */,
+				341E8A3500EB457D8DF89D42 /* VolumeMathTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -443,6 +458,7 @@
 				AB1234567890ABCDEF000014 /* LaunchAtLoginController.swift in Sources */,
 				AB1234567890ABCDEF00000E /* DeviceListView.swift in Sources */,
 				AB1234567890ABCDEF000010 /* IconTintPickerView.swift in Sources */,
+				EED8FCD6CEF0547A5840E211 /* VolumeMath.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

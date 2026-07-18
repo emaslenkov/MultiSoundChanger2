@@ -10,7 +10,7 @@ import Cocoa
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-    private let applicationController: ApplicationController = ApplicationControllerImp()
+    private let applicationController: ApplicationController = ApplicationControllerImpl()
     private var signalSources: [DispatchSourceSignal] = []
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {

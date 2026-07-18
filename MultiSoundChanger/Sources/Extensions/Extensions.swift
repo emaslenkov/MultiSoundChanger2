@@ -1,5 +1,5 @@
 //
-//  StringExtensions.swift
+//  Extensions.swift
 //  MultiSoundChanger
 //
 //  Created by Dmitry Medyuho on 03.04.17.

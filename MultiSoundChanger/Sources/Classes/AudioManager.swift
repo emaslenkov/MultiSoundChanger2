@@ -362,6 +362,13 @@ final class AudioManagerImpl: AudioManager {
 
     /// Order matters here (`docs/coreaudio.md` §"без заикания"): configure/create before switching
     /// default, switch default before destroying, never switch default and destroy in the same step.
+    ///
+    /// The single-device branch resolves UID -> deviceID through `deviceIDByUID`, which is only
+    /// populated by `refreshDevices()` (i.e. by the menu opening). That precondition is structural,
+    /// not accidental: a row click is impossible without the menu being open, and opening it always
+    /// refreshes. Deliberately NOT guarded with an extra HAL refresh here — there is no programmatic
+    /// selection path bypassing the menu, and burning HAL property reads on every pick to defend
+    /// against a nonexistent caller isn't worth it (owner decision, 2026-07-18).
     private func routeSelection(_ uids: [String]) {
         if uids.count >= 2 {
             let alreadyOnAggregate = aggregateDeviceManager.deviceID != nil && selectedDevice == aggregateDeviceManager.deviceID

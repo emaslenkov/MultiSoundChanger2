@@ -25,10 +25,20 @@ protocol SystemVolumeIconController: AnyObject {
 // MARK: - Implementation
 
 final class SystemVolumeIconControllerImpl: SystemVolumeIconController {
-    private let defaults = UserDefaults.standard
+    private let defaults: UserDefaults
+    private let shell: (String) -> String?
+
+    /// Both dependencies default to the real thing — production call sites stay unchanged. The
+    /// seams exist because this state machine has no substance outside its side effects: without
+    /// them the A-8 invariants (save-before-write, verify-by-reading-back, external change wins)
+    /// would be untestable.
+    init(defaults: UserDefaults = .standard, shell: @escaping (String) -> String? = Runner.shell) {
+        self.defaults = defaults
+        self.shell = shell
+    }
 
     func currentValue() -> Int? {
-        guard let output = Runner.shell(
+        guard let output = shell(
             "\(Constants.Paths.defaults) -currentHost read \(Constants.ControlCenter.domain) \(Constants.ControlCenter.soundKey)"
         ) else {
             return nil
@@ -101,12 +111,12 @@ final class SystemVolumeIconControllerImpl: SystemVolumeIconController {
     // MARK: Private
 
     private func writeControlCenterValue(_ value: Int) {
-        Runner.shell(
+        _ = shell(
             "\(Constants.Paths.defaults) -currentHost write \(Constants.ControlCenter.domain) \(Constants.ControlCenter.soundKey) -int \(value)"
         )
     }
 
     private func killControlCenter() {
-        Runner.shell("\(Constants.Paths.killall) \(Constants.ControlCenter.processName)")
+        _ = shell("\(Constants.Paths.killall) \(Constants.ControlCenter.processName)")
     }
 }

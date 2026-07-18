@@ -8,6 +8,26 @@ Versions below v1.1.0 belong to the upstream project.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Unit test suite** — 82 tests covering the app's core logic: device selection invariants (the
+  set never empties), single/multi routing and the launch restore chain, every branch of the
+  follow-the-system-default reconciliation, volume fan-out to aggregate sub-devices with the mute
+  threshold, the managed aggregate lifecycle (orphan reuse, master policy, drift compensation
+  ordering), the `hidutil` remap merge that preserves user-defined key mappings, the Control Center
+  icon hide/restore state machine, and the media-key volume stepping grid. Tests run as a hosted
+  bundle via `xcodebuild test` and in CI on every push and pull request; the host app stays inert
+  under tests so a test run never touches the real system.
+
+### Changed
+
+- Internal, behavior-preserving refactoring for testability: injectable `UserDefaults`/shell seams
+  (production defaults unchanged), media-key stepping extracted into pure `VolumeMath` functions,
+  `hidutil` remap parsing/merging extracted into pure functions, and typo cleanups in internal
+  identifiers. No user-facing changes.
+
 ## [1.4.0] — 2026-07-17
 
 Tagged `v1.4.0-tahoe`, bundle version a plain 1.4.0 as macOS expects.

@@ -18,7 +18,7 @@ protocol ApplicationController: AnyObject {
 
 // MARK: - Implementation
 
-final class ApplicationControllerImp: ApplicationController {
+final class ApplicationControllerImpl: ApplicationController {
     private let audio: Audio = AudioImpl()
     private lazy var aggregateDeviceManager: AggregateDeviceManager = AggregateDeviceManagerImpl(audio: audio)
     private lazy var audioManager: AudioManager = AudioManagerImpl(audio: audio, aggregateDeviceManager: aggregateDeviceManager)
@@ -73,24 +73,24 @@ final class ApplicationControllerImp: ApplicationController {
 
 // MARK: - MediaManagerDelegate
 
-extension ApplicationControllerImp: MediaManagerDelegate {
+extension ApplicationControllerImpl: MediaManagerDelegate {
     func onMediaKeyTap(mediaKey: MediaKey) {
         guard let selectedDeviceVolume = audioManager.getSelectedDeviceVolume() else {
             return
         }
         
-        let volumeStep: Float = 1 / Float(Constants.chicletsCount)
-        var volume: Float = (selectedDeviceVolume / volumeStep).rounded() * volumeStep
-        
+        // Snap-to-grid before stepping (VolumeMath): key presses always land on multiples of 1/16.
+        var volume: Float = VolumeMath.snapped(selectedDeviceVolume)
+
         switch mediaKey {
         case .volumeUp:
-            volume = (volume + volumeStep).clamped(to: 0...1)
+            volume = VolumeMath.increased(from: selectedDeviceVolume)
             audioManager.setSelectedDeviceVolume(masterChannelLevel: volume, leftChannelLevel: volume, rightChannelLevel: volume)
-            
+
         case .volumeDown:
-            volume = (volume - volumeStep).clamped(to: 0...1)
+            volume = VolumeMath.decreased(from: selectedDeviceVolume)
             audioManager.setSelectedDeviceVolume(masterChannelLevel: volume, leftChannelLevel: volume, rightChannelLevel: volume)
-            
+
         case .mute:
             audioManager.toggleMute()
             if audioManager.isSelectedDeviceMuted() {
