@@ -1,18 +1,16 @@
 <p align="center">
-  <img width="440" src="screenshots/menu.png" alt="MultiSoundChanger2 menu: multi-output device selection, hide system icon, icon tint, and language selection">
+  <img width="440" src="https://raw.githubusercontent.com/emaslenkov/MultiSoundChanger2/master/screenshots/menu.png" alt="MultiSoundChanger2 menu: multi-output device selection, hide system icon, icon tint, and language selection">
 </p>
 
-## MultiSound Changer for macOS — Tahoe / Apple Silicon fork
-
-> **This is a community fork** of [rlxone/MultiSoundChanger](https://github.com/rlxone/MultiSoundChanger),
-> which has seen no release since v1.0.1 (April 2021) and neither builds nor works on Apple Silicon
-> or macOS Tahoe. It is **not** affiliated with or endorsed by the original author.
+# MultiSound Changer for macOS
 
 A menu-bar app that controls the volume of **aggregate and multi-output devices** — the ones macOS
 won't let you adjust, because its built-in volume slider is greyed out for them. It sets the volume of
-every sub-device in the aggregate, which is the one thing the system control can't do.
+every sub-device in the aggregate at once, which is the one thing the system control can't do.
 
-Features:
+Handy if you run VoodooHDA with 4.0+ output, or any other multi-device setup.
+
+## Features
 
 * **Volume for aggregate / multi-output devices.** The core feature: adjust the volume of every
   device inside an aggregate at once, from a single slider in the menu bar or with the media keys.
@@ -34,47 +32,10 @@ Features:
 * **10 interface languages.** Switch the language straight from the menu (**Language ▶**) with no
   relaunch: English, Русский, Español, Français, 中文, Deutsch, Italiano, Português (Brasil), 日本語,
   한국어. Defaults to **System (follows macOS)**.
-* **Native look** — follows the system light/dark appearance.
-* **Universal binary** — runs natively on Apple Silicon and Intel, macOS 11+ including Tahoe.
-
-Handy if you run VoodooHDA with 4.0+ output, among other multi-device setups.
-
-## Tahoe / Apple Silicon support
-
-Three separate things were broken. Here is what each one actually was, and what this fork does about
-it.
-
-### 1. It didn't build for Apple Silicon
-
-The project shipped a compiled copy of Apple's private `OSD.framework`, and that binary contained
-only an x86_64 slice — hence `EXCLUDED_ARCHS = arm64` in the project settings.
-
-**This fork removes the private framework entirely.** The volume HUD is now drawn by the app itself
-(see below), so nothing calls `OSDManager` any more and nothing needs to link against it. The app no
-longer depends on any private Apple framework, and builds as a universal binary (arm64 + x86_64).
-
-### 2. The volume HUD stopped appearing
-
-Worth being precise, since the popular explanation is wrong: `OSDManager` **is still present** on
-Tahoe, and `showImage:...` still accepts the call without crashing. What no longer happens is the
-drawing — `OSDUIHelper`, the XPC service behind it, is never spawned, so the call goes nowhere.
-(`OSDUIHelper` itself still exists; it moved out of `OSD.framework/XPCServices/` to
-`/System/Library/CoreServices/OSDUIHelper.app`.) Apple provides no public API to draw the system HUD.
-
-**This fork draws its own HUD** — a pill near the top of the screen built on `NSVisualEffectView`, so
-it follows light/dark appearance. It is deliberately *not* a replica of the old centred chiclet
-square: Tahoe shows volume as a compact popover near Control Center, so the old design would read as
-dated rather than native.
-
-### 3. Volume keys were swallowed before the app could see them
-
-macOS handles volume keys at the HID layer, *before* any `CGEventTap` can intercept them. That is why
-the useless "volume cannot be changed" HUD kept appearing on aggregate devices.
-
-**This fork remaps the volume keys at the driver level** with `hidutil`, from the consumer usage page
-onto F18/F19/F20 — which the system ignores and the app picks up instead.
-
-> This has a **system-wide side effect** while the app runs. See [Known limitations](#known-limitations).
+* **Its own volume HUD** — a pill near the top of the screen, built on `NSVisualEffectView`, so it
+  follows the system light/dark appearance.
+* **Native look** and a **universal binary** — runs natively on Apple Silicon and Intel, macOS 11+
+  including Tahoe.
 
 ## Usage
 
@@ -111,8 +72,8 @@ The app needs **accessibility permission** to observe media keys, and will ask o
 
 ## Installation
 
-Builds are **ad-hoc signed and not notarized** — there is no Apple Developer ID behind this fork, so
-Gatekeeper will refuse to open it on first launch. To get past it:
+Builds are **ad-hoc signed and not notarized** — there is no Apple Developer ID behind this project,
+so Gatekeeper will refuse to open it on first launch. To get past it:
 
 ```sh
 xattr -cr /Applications/MultiSoundChanger.app
@@ -122,10 +83,12 @@ Alternatively, allow it in System Settings → Privacy & Security after the firs
 
 ## Known limitations
 
-**Volume key remapping can outlive a crash.** The remapping lives in the system, not in this process.
-It is reverted on a normal quit and on `SIGTERM`/`SIGINT`, and re-applied cleanly on the next launch —
-but nothing can catch `SIGKILL` or a power loss. If the app dies that way and you don't restart it,
-your volume keys stay remapped. Fix it by hand with:
+**Volume key remapping can outlive a crash.** To catch volume keys on aggregate devices, the app
+remaps them at the driver level with `hidutil` (macOS handles volume keys at the HID layer, before
+any `CGEventTap` can see them). That remapping lives in the system, not in this process. It is
+reverted on a normal quit and on `SIGTERM`/`SIGINT`, and re-applied cleanly on the next launch — but
+nothing can catch `SIGKILL` or a power loss. If the app dies that way and you don't restart it, your
+volume keys stay remapped. Fix it by hand with:
 
 ```sh
 hidutil property --set '{"UserKeyMapping":[]}'
@@ -155,11 +118,11 @@ killall ControlCenter
 doesn't bring the icon back, check Control Center settings directly.)
 
 **Your own key remappings are safe.** `hidutil` replaces the entire `UserKeyMapping` list, so a naive
-implementation would wipe remappings you set up yourself (Caps Lock → Escape and friends). This fork
+implementation would wipe remappings you set up yourself (Caps Lock → Escape and friends). This app
 reads the current list, keeps everyone else's entries, and removes only its own on exit.
 
-**macOS 11.0 or later.** Raised from 10.10: the HUD uses SF Symbols (macOS 11+), and 11.0 is also the
-earliest macOS running on Apple Silicon.
+**macOS 11.0 or later.** The HUD uses SF Symbols (macOS 11+), and 11.0 is also the earliest macOS
+running on Apple Silicon.
 
 **Intel builds are compiled but lightly tested.** The universal binary includes an x86_64 slice and it
 has been exercised under Rosetta 2 — but not on real Intel hardware.
@@ -176,9 +139,29 @@ xcodebuild -project MultiSoundChanger.xcodeproj -scheme MultiSoundChanger -confi
 CocoaPods is gone — dependencies are vendored. Don't run `pod install`.
 [SwiftLint](https://github.com/realm/SwiftLint) is optional: `brew install swiftlint`.
 
+## Relationship to the original
+
+This is a community fork of [rlxone/MultiSoundChanger](https://github.com/rlxone/MultiSoundChanger),
+unmaintained since v1.0.1 (April 2021), which no longer builds or runs on Apple Silicon or macOS
+Tahoe. It is **not** affiliated with or endorsed by the original author.
+
+What this version changed, briefly:
+
+* **Runs on Apple Silicon.** The original shipped a compiled copy of Apple's private `OSD.framework`
+  with an x86_64-only slice, which forced `EXCLUDED_ARCHS = arm64`. That private framework is gone;
+  the app links no private Apple framework and builds as a universal binary (arm64 + x86_64).
+* **Draws its own volume HUD.** Apple's system HUD can no longer be driven from a third-party app on
+  Tahoe — `OSDUIHelper` (the XPC service behind it) is never spawned, and there is no public API — so
+  the app renders its own instead.
+* **Volume keys reach aggregate devices.** They are remapped at the driver level with `hidutil` (see
+  [Known limitations](#known-limitations)), because macOS otherwise swallows them at the HID layer
+  before the app can act on them.
+* **New in this fork:** the multi-output picker, follow-the-system-output, hide/tint of the menu-bar
+  icon, launch at login, and 10-language localization.
+
 ## Credits
 
-This fork stands on other people's work.
+This project stands on other people's work.
 
 * **[rlxone (Dmitry Medyuho)](https://github.com/rlxone)** — the original MultiSoundChanger.
 * **[Jeffrey Reisberg (@sparc5)](https://github.com/rlxone/MultiSoundChanger/pull/41)** — Apple Silicon
@@ -190,7 +173,9 @@ This fork stands on other people's work.
 See [NOTICE](NOTICE) for full attribution and [CHANGELOG.md](CHANGELOG.md) for what changed.
 
 ## Inspiration
+
 * [retrography/audioswitch](https://github.com/retrography/audioswitch)
 
 ## Licence
-* This project is released under the Apache 2.0 licence. See LICENCE
+
+This project is released under the Apache 2.0 licence. See [LICENCE](LICENCE).
