@@ -1,0 +1,24 @@
+/*
+  Localizable.strings (Korean)
+  MultiSoundChanger
+*/
+
+"volume" = "음량:";
+"output" = "출력 장치";
+"output.multiple" = "출력 장치 (%d)";
+"output.hint" = "클릭: 한 개   ·   ⇧-클릭: 여러 개";
+"quit" = "종료";
+"sound.preferences" = "사운드 환경설정…";
+"audio.devices" = "오디오 장치…";
+"muted" = "음소거";
+"hide.system.icon" = "시스템 음량 아이콘 숨기기";
+"launch.at.login" = "로그인 시 실행";
+"icon.tint.header" = "아이콘 스타일";
+"icon.tint.default" = "기본값";
+"icon.tint.blue" = "파랑";
+"icon.tint.orange" = "주황";
+"icon.tint.green" = "초록";
+"icon.tint.purple" = "보라";
+"icon.tint.pink" = "분홍";
+"language" = "언어";
+"language.system" = "시스템 (macOS 따름)";

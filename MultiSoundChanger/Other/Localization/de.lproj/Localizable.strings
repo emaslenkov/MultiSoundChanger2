@@ -1,0 +1,24 @@
+/*
+  Localizable.strings (German)
+  MultiSoundChanger
+*/
+
+"volume" = "Lautstärke:";
+"output" = "Ausgabegerät";
+"output.multiple" = "Ausgabegeräte (%d)";
+"output.hint" = "Klick: ein Gerät   ·   ⇧-Klick: mehrere";
+"quit" = "Beenden";
+"sound.preferences" = "Toneinstellungen…";
+"audio.devices" = "Audiogeräte…";
+"muted" = "Stumm";
+"hide.system.icon" = "Systemlautstärkesymbol ausblenden";
+"launch.at.login" = "Bei der Anmeldung öffnen";
+"icon.tint.header" = "Symbolstil";
+"icon.tint.default" = "Standard";
+"icon.tint.blue" = "Blau";
+"icon.tint.orange" = "Orange";
+"icon.tint.green" = "Grün";
+"icon.tint.purple" = "Lila";
+"icon.tint.pink" = "Rosa";
+"language" = "Sprache";
+"language.system" = "System (folgt macOS)";

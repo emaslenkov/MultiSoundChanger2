@@ -1,0 +1,24 @@
+/*
+  Localizable.strings (French)
+  MultiSoundChanger
+*/
+
+"volume" = "Volume :";
+"output" = "Périphérique de sortie";
+"output.multiple" = "Périphériques de sortie (%d)";
+"output.hint" = "Clic : un périphérique   ·   ⇧-clic : plusieurs";
+"quit" = "Quitter";
+"sound.preferences" = "Préférences Son…";
+"audio.devices" = "Périphériques audio…";
+"muted" = "Muet";
+"hide.system.icon" = "Masquer l’icône de volume du système";
+"launch.at.login" = "Ouvrir à la connexion";
+"icon.tint.header" = "Style de l’icône";
+"icon.tint.default" = "Par défaut";
+"icon.tint.blue" = "Bleu";
+"icon.tint.orange" = "Orange";
+"icon.tint.green" = "Vert";
+"icon.tint.purple" = "Violet";
+"icon.tint.pink" = "Rose";
+"language" = "Langue";
+"language.system" = "Système (suit macOS)";

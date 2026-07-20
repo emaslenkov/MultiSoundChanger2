@@ -8,22 +8,27 @@
 
 import Foundation
 
+/// The single funnel for every user-facing string. Each entry is a *computed* property routed
+/// through `LanguageManager`, not a one-time `NSLocalizedString` constant — that's what lets an
+/// in-app language switch re-localize the UI at runtime once the menu is rebuilt (ADR A-13).
 enum Strings {
-    static var volume = NSLocalizedString("volume", comment: "")
-    static var output = NSLocalizedString("output", comment: "")
-    static var outputMultiple = NSLocalizedString("output.multiple", comment: "")
-    static var outputHint = NSLocalizedString("output.hint", comment: "")
-    static var quit = NSLocalizedString("quit", comment: "")
-    static var soundPreferences = NSLocalizedString("sound.preferences", comment: "")
-    static var audioDevices = NSLocalizedString("audio.devices", comment: "")
-    static var muted = NSLocalizedString("muted", comment: "")
-    static var hideSystemVolumeIcon = NSLocalizedString("hide.system.icon", comment: "")
-    static var launchAtLogin = NSLocalizedString("launch.at.login", comment: "")
-    static var iconTintHeader = NSLocalizedString("icon.tint.header", comment: "")
-    static var iconTintDefault = NSLocalizedString("icon.tint.default", comment: "")
-    static var iconTintBlue = NSLocalizedString("icon.tint.blue", comment: "")
-    static var iconTintOrange = NSLocalizedString("icon.tint.orange", comment: "")
-    static var iconTintGreen = NSLocalizedString("icon.tint.green", comment: "")
-    static var iconTintPurple = NSLocalizedString("icon.tint.purple", comment: "")
-    static var iconTintPink = NSLocalizedString("icon.tint.pink", comment: "")
+    static var volume: String { LanguageManager.localized("volume") }
+    static var output: String { LanguageManager.localized("output") }
+    static var outputMultiple: String { LanguageManager.localized("output.multiple") }
+    static var outputHint: String { LanguageManager.localized("output.hint") }
+    static var quit: String { LanguageManager.localized("quit") }
+    static var soundPreferences: String { LanguageManager.localized("sound.preferences") }
+    static var audioDevices: String { LanguageManager.localized("audio.devices") }
+    static var muted: String { LanguageManager.localized("muted") }
+    static var hideSystemVolumeIcon: String { LanguageManager.localized("hide.system.icon") }
+    static var launchAtLogin: String { LanguageManager.localized("launch.at.login") }
+    static var iconTintHeader: String { LanguageManager.localized("icon.tint.header") }
+    static var iconTintDefault: String { LanguageManager.localized("icon.tint.default") }
+    static var iconTintBlue: String { LanguageManager.localized("icon.tint.blue") }
+    static var iconTintOrange: String { LanguageManager.localized("icon.tint.orange") }
+    static var iconTintGreen: String { LanguageManager.localized("icon.tint.green") }
+    static var iconTintPurple: String { LanguageManager.localized("icon.tint.purple") }
+    static var iconTintPink: String { LanguageManager.localized("icon.tint.pink") }
+    static var language: String { LanguageManager.localized("language") }
+    static var languageSystem: String { LanguageManager.localized("language.system") }
 }

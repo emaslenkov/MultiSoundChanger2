@@ -32,6 +32,7 @@ extension StatusBarControllerImpl {
         case audioSetup
         case hideSystemIcon
         case launchAtLogin
+        case language
         case iconTintHeader
         case iconTint
         case quit
@@ -116,6 +117,7 @@ final class StatusBarControllerImpl: NSObject, StatusBarController {
             menu.addItem(launchAtLoginItem)
         }
 
+        menu.addItem(getMenuItem(by: .language))
         menu.addItem(secondSeparatorItem)
         menu.addItem(iconTintHeaderItem)
         menu.addItem(iconTintItem)
@@ -126,6 +128,10 @@ final class StatusBarControllerImpl: NSObject, StatusBarController {
 
         refreshDeviceList()
         refreshIconTintPicker()
+        // Sync the status-bar icon (and slider) with the selected device's real volume at launch.
+        // Without this the icon stays on its initial `volumeImage1` — the "muted/lowest" glyph —
+        // until the first volume event, so a login-launched app shows "muted" over live audio.
+        refreshVolumeDisplay()
     }
 
     func changeStatusItemImage(value: Float) {
@@ -241,6 +247,11 @@ final class StatusBarControllerImpl: NSObject, StatusBarController {
             item.state = launchAtLoginController.isEnabled ? .on : .off
             return item
 
+        case .language:
+            let item = NSMenuItem(title: Strings.language, action: nil, keyEquivalent: Constants.Keys.empty.rawValue)
+            item.submenu = buildLanguageSubmenu()
+            return item
+
         case .iconTintHeader:
             let item = NSMenuItem(title: Strings.iconTintHeader, action: nil, keyEquivalent: Constants.Keys.empty.rawValue)
             item.isEnabled = false
@@ -326,6 +337,61 @@ final class StatusBarControllerImpl: NSObject, StatusBarController {
         refreshIconTintPicker()
     }
 
+    // MARK: Language (A-13)
+
+    /// `System` (follow macOS) first, then a separator, then the pinned languages sorted
+    /// alphabetically by their own name (endonym) — the name the user actually reads — with Latin,
+    /// Cyrillic and CJK falling into locale order. A checkmark marks the active language.
+    private func buildLanguageSubmenu() -> NSMenu {
+        let submenu = NSMenu()
+        submenu.autoenablesItems = false
+        let current = LanguageManager.current
+
+        submenu.addItem(languageMenuItem(for: .system, current: current))
+        submenu.addItem(.separator())
+        let sorted = AppLanguage.allCases
+            .filter { $0 != .system }
+            .sorted { $0.displayName.localizedStandardCompare($1.displayName) == .orderedAscending }
+        for language in sorted {
+            submenu.addItem(languageMenuItem(for: language, current: current))
+        }
+        return submenu
+    }
+
+    private func languageMenuItem(for language: AppLanguage, current: AppLanguage) -> NSMenuItem {
+        let item = NSMenuItem(
+            title: language.displayName,
+            action: #selector(menuSelectLanguage(_:)),
+            keyEquivalent: Constants.Keys.empty.rawValue
+        )
+        item.target = self
+        item.representedObject = language
+        item.state = language == current ? .on : .off
+        return item
+    }
+
+    @objc
+    private func menuSelectLanguage(_ sender: NSMenuItem) {
+        guard let language = sender.representedObject as? AppLanguage, language != LanguageManager.current else {
+            return
+        }
+        LanguageManager.setCurrent(language)
+        rebuildMenuAfterLanguageChange()
+    }
+
+    /// Language strings are baked into menu items at build time, so switching language rebuilds the
+    /// whole menu. The custom view items (slider, device list, tint swatches) are reused instances —
+    /// an `NSView` lives in exactly one menu item at a time, so they must be detached from the old
+    /// menu *before* the new menu claims them, or they render blank (the device list and tint
+    /// swatches vanish while the translated text stays). Null out the old items' views and drop the
+    /// old menu first, then rebuild.
+    private func rebuildMenuAfterLanguageChange() {
+        statusItem.menu?.cancelTracking()
+        statusItem.menu?.items.forEach { $0.view = nil }
+        statusItem.menu = nil
+        createMenu()
+    }
+
     // MARK: Actions
 
     @objc
@@ -374,6 +440,9 @@ extension StatusBarControllerImpl: NSMenuDelegate {
     func menuNeedsUpdate(_ menu: NSMenu) {
         refreshDeviceList()
         refreshIconTintPicker()
+        // Catch a volume change made outside the app between menu openings, in case the HAL
+        // listener missed it — keeps the status-bar icon honest even without a volume event.
+        refreshVolumeDisplay()
         // Reflect a login-item change made in System Settings while our menu was closed.
         launchAtLoginItem?.state = launchAtLoginController.isEnabled ? .on : .off
     }

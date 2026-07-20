@@ -1,0 +1,24 @@
+/*
+  Localizable.strings (Chinese, Simplified)
+  MultiSoundChanger
+*/
+
+"volume" = "音量：";
+"output" = "输出设备";
+"output.multiple" = "输出设备 (%d)";
+"output.hint" = "点击：单个设备   ·   ⇧-点击：多个";
+"quit" = "退出";
+"sound.preferences" = "声音偏好设置…";
+"audio.devices" = "音频设备…";
+"muted" = "已静音";
+"hide.system.icon" = "隐藏系统音量图标";
+"launch.at.login" = "登录时启动";
+"icon.tint.header" = "选择图标样式";
+"icon.tint.default" = "默认";
+"icon.tint.blue" = "蓝色";
+"icon.tint.orange" = "橙色";
+"icon.tint.green" = "绿色";
+"icon.tint.purple" = "紫色";
+"icon.tint.pink" = "粉色";
+"language" = "语言";
+"language.system" = "系统（跟随 macOS）";

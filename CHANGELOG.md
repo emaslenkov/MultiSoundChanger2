@@ -8,9 +8,18 @@ Versions below v1.1.0 belong to the upstream project.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.5.0] — 2026-07-20
+
+Tagged `v1.5.0-tahoe`, bundle version a plain 1.5.0 as macOS expects.
 
 ### Added
+
+- **Localization — 10 languages, switchable from the menu.** A new `Language ▶` submenu lets you
+  pick the interface language: English, Русский, Español, Français, 中文, Deutsch, Italiano,
+  Português (Brasil), 日本語, 한국어. The first entry, `System (follows macOS)`, is the default and
+  tracks your macOS language. Each language is listed under its own name. Switching is instant — no
+  relaunch: the app loads the chosen `.lproj` bundle at runtime and rebuilds the menu. A checkmark
+  marks the active language.
 
 - **Unit test suite** — 82 tests covering the app's core logic: device selection invariants (the
   set never empties), single/multi routing and the launch restore chain, every branch of the
@@ -27,6 +36,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (production defaults unchanged), media-key stepping extracted into pure `VolumeMath` functions,
   `hidutil` remap parsing/merging extracted into pure functions, and typo cleanups in internal
   identifiers. No user-facing changes.
+
+### Fixed
+
+- **Menu-bar icon showed "muted" at launch over live audio.** When the app started (especially via
+  Launch at login), the menu-bar icon stayed on its lowest/muted glyph until the first volume change,
+  even though sound was playing at the real level. The icon now syncs with the selected device's
+  actual volume as soon as the menu is built, and refreshes whenever the menu opens.
 
 ## [1.4.0] — 2026-07-17
 

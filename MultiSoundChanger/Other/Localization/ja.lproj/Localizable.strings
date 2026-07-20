@@ -1,0 +1,24 @@
+/*
+  Localizable.strings (Japanese)
+  MultiSoundChanger
+*/
+
+"volume" = "音量：";
+"output" = "出力デバイス";
+"output.multiple" = "出力デバイス (%d)";
+"output.hint" = "クリック：1台   ·   ⇧-クリック：複数";
+"quit" = "終了";
+"sound.preferences" = "サウンド環境設定…";
+"audio.devices" = "オーディオデバイス…";
+"muted" = "ミュート";
+"hide.system.icon" = "システムの音量アイコンを非表示";
+"launch.at.login" = "ログイン時に起動";
+"icon.tint.header" = "アイコンのスタイル";
+"icon.tint.default" = "デフォルト";
+"icon.tint.blue" = "ブルー";
+"icon.tint.orange" = "オレンジ";
+"icon.tint.green" = "グリーン";
+"icon.tint.purple" = "パープル";
+"icon.tint.pink" = "ピンク";
+"language" = "言語";
+"language.system" = "システム（macOSに従う）";

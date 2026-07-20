@@ -1,0 +1,24 @@
+/*
+  Localizable.strings (Russian)
+  MultiSoundChanger
+*/
+
+"volume" = "Громкость:";
+"output" = "Устройство вывода";
+"output.multiple" = "Устройства вывода (%d)";
+"output.hint" = "Клик: одно устройство   ·   ⇧-клик: несколько";
+"quit" = "Выйти";
+"sound.preferences" = "Настройки звука…";
+"audio.devices" = "Аудиоустройства…";
+"muted" = "Без звука";
+"hide.system.icon" = "Скрыть системный значок громкости";
+"launch.at.login" = "Запускать при входе";
+"icon.tint.header" = "Стиль значка";
+"icon.tint.default" = "По умолчанию";
+"icon.tint.blue" = "Синий";
+"icon.tint.orange" = "Оранжевый";
+"icon.tint.green" = "Зелёный";
+"icon.tint.purple" = "Фиолетовый";
+"icon.tint.pink" = "Розовый";
+"language" = "Язык";
+"language.system" = "Системный (как в macOS)";

@@ -1,9 +1,6 @@
-/* 
-  Localization.strings
+/*
+  Localizable.strings (English — base)
   MultiSoundChanger
-
-  Created by Dmitry Medyuho on 22.11.2020.
-  Copyright © 2020 Dmitry Medyuho. All rights reserved.
 */
 
 "volume" = "Volume:";
@@ -23,3 +20,5 @@
 "icon.tint.green" = "Green";
 "icon.tint.purple" = "Purple";
 "icon.tint.pink" = "Pink";
+"language" = "Language";
+"language.system" = "System (follows macOS)";

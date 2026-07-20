@@ -52,6 +52,7 @@ enum Constants {
         static let hideSystemVolumeIcon = "hideSystemVolumeIcon"
         static let savedSystemVolumeIconValue = "savedSystemVolumeIconValue"
         static let menuBarIconTint = "menuBarIconTint"
+        static let appLanguage = "appLanguage"
     }
 
     enum Notifications {
