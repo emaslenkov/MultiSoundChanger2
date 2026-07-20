@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.5.0] — 2026-07-20
 
-Tagged `v1.5.0-tahoe`, bundle version a plain 1.5.0 as macOS expects.
+Tagged `v1.5.0`.
 
 ### Added
 
@@ -46,7 +46,7 @@ Tagged `v1.5.0-tahoe`, bundle version a plain 1.5.0 as macOS expects.
 
 ## [1.4.0] — 2026-07-17
 
-Tagged `v1.4.0-tahoe`, bundle version a plain 1.4.0 as macOS expects.
+Tagged `v1.4.0`.
 
 ### Added
 
@@ -60,7 +60,7 @@ Tagged `v1.4.0-tahoe`, bundle version a plain 1.4.0 as macOS expects.
 
 ## [1.3.0] — 2026-07-17
 
-Tagged `v1.3.0-tahoe`, bundle version a plain 1.3.0 as macOS expects.
+Tagged `v1.3.0`.
 
 ### Added
 
@@ -79,7 +79,7 @@ Tagged `v1.3.0-tahoe`, bundle version a plain 1.3.0 as macOS expects.
 
 ## [1.2.0] — 2026-07-16
 
-Tagged `v1.2.0-tahoe`, bundle version a plain 1.2.0 as macOS expects.
+Tagged `v1.2.0`.
 
 ### Added
 
@@ -109,8 +109,7 @@ Tagged `v1.2.0-tahoe`, bundle version a plain 1.2.0 as macOS expects.
 
 ## [1.1.0] — 2026-07-15
 
-First release of this fork. Tagged `v1.1.0-tahoe`: the suffix marks it as a community fork rather
-than an official rlxone release, while the bundle version stays a plain 1.1.0 as macOS expects.
+First release of this fork, tagged `v1.1.0`.
 
 ### Added
 
