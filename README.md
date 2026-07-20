@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="440" src="screenshots/menu.png" alt="MultiSoundChanger2 menu: multi-output device selection, hide system icon, and icon tint">
+  <img width="440" src="screenshots/menu.png" alt="MultiSoundChanger2 menu: multi-output device selection, hide system icon, icon tint, and language selection">
 </p>
 
 ## MultiSound Changer for macOS — Tahoe / Apple Silicon fork
@@ -31,6 +31,9 @@ Features:
 * **Media keys** (volume up / down / mute) drive the selected device, aggregate included.
 * **Launch at login.** Optionally start the app automatically when you log in (off by default;
   available on macOS 13+).
+* **10 interface languages.** Switch the language straight from the menu (**Language ▶**) with no
+  relaunch: English, Русский, Español, Français, 中文, Deutsch, Italiano, Português (Brasil), 日本語,
+  한국어. Defaults to **System (follows macOS)**.
 * **Native look** — follows the system light/dark appearance.
 * **Universal binary** — runs natively on Apple Silicon and Intel, macOS 11+ including Tahoe.
 
@@ -97,6 +100,12 @@ Pick one of the colour swatches in the menu (Blue / Orange / Green / Purple / Pi
 app's own icon, as another way to tell it apart from the system one at a glance. Each swatch previews
 the actual icon in that colour. "Default" resets it to the normal look. The choice is remembered
 across restarts.
+
+### Choosing the interface language
+
+Open **Language** in the menu and pick one of ten languages, or leave it on **System (follows
+macOS)** to track your macOS language. The change applies immediately — no restart. Each language is
+listed under its own name, sorted alphabetically. The choice is remembered across restarts.
 
 The app needs **accessibility permission** to observe media keys, and will ask on first launch.
 
